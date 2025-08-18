@@ -16,6 +16,8 @@ __pycache__/
 instance/
 .webassets-cache
 
-# data
-docs
+# data files (not docs directory)
+docs/test/
+sample_evaluation.json
+sample_evaluation.csv
 .DS_Store
