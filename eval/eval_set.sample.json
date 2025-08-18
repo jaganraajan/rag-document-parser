@@ -1,0 +1,27 @@
+[
+  {
+    "query": "existential meaning",
+    "relevant_substrings": ["existential", "meaning of life", "meaning", "existence"],
+    "notes": "Demo example for existential philosophy queries"
+  },
+  {
+    "query": "consciousness and awareness",
+    "relevant_substrings": ["consciousness", "awareness", "conscious", "mind"],
+    "notes": "Demo example for consciousness-related queries"
+  },
+  {
+    "query": "truth and knowledge",
+    "relevant_substrings": ["truth", "knowledge", "epistemology", "knowing"],
+    "notes": "Demo example for epistemological queries"
+  },
+  {
+    "query": "free will and determinism",
+    "relevant_substrings": ["free will", "determinism", "choice", "freedom"],
+    "notes": "Demo example for free will vs determinism debates"
+  },
+  {
+    "query": "ethics and morality",
+    "relevant_substrings": ["ethics", "morality", "moral", "ethical", "right", "wrong"],
+    "notes": "Demo example for ethical philosophy queries"
+  }
+]

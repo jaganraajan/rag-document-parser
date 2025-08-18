@@ -21,3 +21,7 @@ docs/test/
 sample_evaluation.json
 sample_evaluation.csv
 .DS_Store
+
+# Generated data and temp files
+data/chunks_corpus.jsonl
+test_hybrid.py

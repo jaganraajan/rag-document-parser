@@ -1,0 +1,509 @@
+[
+  {
+    "query": "existential meaning",
+    "relevant_substrings": [
+      "existential",
+      "meaning of life",
+      "meaning",
+      "existence"
+    ],
+    "methods": {
+      "vector": {
+        "metrics": {
+          "coverage_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "relevant_retrieved": 3,
+          "total_retrieved": 3
+        },
+        "latency_ms": 8.597612380981445,
+        "results": [
+          {
+            "id": "mock_vector_0",
+            "text": "This document discusses existential meaning and related philosophical concepts.",
+            "score": 1.0,
+            "relevant": true
+          },
+          {
+            "id": "mock_vector_1",
+            "text": "This document discusses existential meaning and related philosophical concepts.",
+            "score": 0.85,
+            "relevant": true
+          },
+          {
+            "id": "mock_vector_2",
+            "text": "Here we explore various topics including existential.",
+            "score": 0.7,
+            "relevant": true
+          }
+        ]
+      },
+      "bm25": {
+        "metrics": {
+          "coverage_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "relevant_retrieved": 3,
+          "total_retrieved": 3
+        },
+        "latency_ms": 0.44083595275878906,
+        "results": [
+          {
+            "id": "mock_bm25_0",
+            "text": "This document discusses existential meaning and related philosophical concepts.",
+            "score": 1.0,
+            "relevant": true
+          },
+          {
+            "id": "mock_bm25_1",
+            "text": "This document discusses existential meaning and related philosophical concepts.",
+            "score": 0.85,
+            "relevant": true
+          },
+          {
+            "id": "mock_bm25_2",
+            "text": "Here we explore various topics including existential.",
+            "score": 0.7,
+            "relevant": true
+          }
+        ]
+      },
+      "hybrid": {
+        "metrics": {
+          "coverage_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "relevant_retrieved": 3,
+          "total_retrieved": 3
+        },
+        "latency_ms": 0.4451274871826172,
+        "results": [
+          {
+            "id": "mock_hybrid_0",
+            "text": "This document discusses existential meaning and related philosophical concepts.",
+            "score": 1.0,
+            "relevant": true
+          },
+          {
+            "id": "mock_hybrid_1",
+            "text": "This document discusses existential meaning and related philosophical concepts.",
+            "score": 0.85,
+            "relevant": true
+          },
+          {
+            "id": "mock_hybrid_2",
+            "text": "Here we explore various topics including existential.",
+            "score": 0.7,
+            "relevant": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "query": "consciousness and awareness",
+    "relevant_substrings": [
+      "consciousness",
+      "awareness",
+      "conscious",
+      "mind"
+    ],
+    "methods": {
+      "vector": {
+        "metrics": {
+          "coverage_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "relevant_retrieved": 3,
+          "total_retrieved": 3
+        },
+        "latency_ms": 0.4062652587890625,
+        "results": [
+          {
+            "id": "mock_vector_0",
+            "text": "This document discusses consciousness and awareness and related philosophical concepts.",
+            "score": 1.0,
+            "relevant": true
+          },
+          {
+            "id": "mock_vector_1",
+            "text": "This document discusses consciousness and awareness and related philosophical concepts.",
+            "score": 0.85,
+            "relevant": true
+          },
+          {
+            "id": "mock_vector_2",
+            "text": "Here we explore various topics including consciousness.",
+            "score": 0.7,
+            "relevant": true
+          }
+        ]
+      },
+      "bm25": {
+        "metrics": {
+          "coverage_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "relevant_retrieved": 3,
+          "total_retrieved": 3
+        },
+        "latency_ms": 0.4200935363769531,
+        "results": [
+          {
+            "id": "mock_bm25_0",
+            "text": "This document discusses consciousness and awareness and related philosophical concepts.",
+            "score": 1.0,
+            "relevant": true
+          },
+          {
+            "id": "mock_bm25_1",
+            "text": "This document discusses consciousness and awareness and related philosophical concepts.",
+            "score": 0.85,
+            "relevant": true
+          },
+          {
+            "id": "mock_bm25_2",
+            "text": "Here we explore various topics including consciousness.",
+            "score": 0.7,
+            "relevant": true
+          }
+        ]
+      },
+      "hybrid": {
+        "metrics": {
+          "coverage_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "relevant_retrieved": 3,
+          "total_retrieved": 3
+        },
+        "latency_ms": 0.40721893310546875,
+        "results": [
+          {
+            "id": "mock_hybrid_0",
+            "text": "This document discusses consciousness and awareness and related philosophical concepts.",
+            "score": 1.0,
+            "relevant": true
+          },
+          {
+            "id": "mock_hybrid_1",
+            "text": "This document discusses consciousness and awareness and related philosophical concepts.",
+            "score": 0.85,
+            "relevant": true
+          },
+          {
+            "id": "mock_hybrid_2",
+            "text": "Here we explore various topics including consciousness.",
+            "score": 0.7,
+            "relevant": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "query": "truth and knowledge",
+    "relevant_substrings": [
+      "truth",
+      "knowledge",
+      "epistemology",
+      "knowing"
+    ],
+    "methods": {
+      "vector": {
+        "metrics": {
+          "coverage_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "relevant_retrieved": 3,
+          "total_retrieved": 3
+        },
+        "latency_ms": 0.4763603210449219,
+        "results": [
+          {
+            "id": "mock_vector_0",
+            "text": "This document discusses truth and knowledge and related philosophical concepts.",
+            "score": 1.0,
+            "relevant": true
+          },
+          {
+            "id": "mock_vector_1",
+            "text": "This document discusses truth and knowledge and related philosophical concepts.",
+            "score": 0.85,
+            "relevant": true
+          },
+          {
+            "id": "mock_vector_2",
+            "text": "Here we explore various topics including truth.",
+            "score": 0.7,
+            "relevant": true
+          }
+        ]
+      },
+      "bm25": {
+        "metrics": {
+          "coverage_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "relevant_retrieved": 3,
+          "total_retrieved": 3
+        },
+        "latency_ms": 0.4334449768066406,
+        "results": [
+          {
+            "id": "mock_bm25_0",
+            "text": "This document discusses truth and knowledge and related philosophical concepts.",
+            "score": 1.0,
+            "relevant": true
+          },
+          {
+            "id": "mock_bm25_1",
+            "text": "This document discusses truth and knowledge and related philosophical concepts.",
+            "score": 0.85,
+            "relevant": true
+          },
+          {
+            "id": "mock_bm25_2",
+            "text": "Here we explore various topics including truth.",
+            "score": 0.7,
+            "relevant": true
+          }
+        ]
+      },
+      "hybrid": {
+        "metrics": {
+          "coverage_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "relevant_retrieved": 3,
+          "total_retrieved": 3
+        },
+        "latency_ms": 0.38123130798339844,
+        "results": [
+          {
+            "id": "mock_hybrid_0",
+            "text": "This document discusses truth and knowledge and related philosophical concepts.",
+            "score": 1.0,
+            "relevant": true
+          },
+          {
+            "id": "mock_hybrid_1",
+            "text": "This document discusses truth and knowledge and related philosophical concepts.",
+            "score": 0.85,
+            "relevant": true
+          },
+          {
+            "id": "mock_hybrid_2",
+            "text": "Here we explore various topics including truth.",
+            "score": 0.7,
+            "relevant": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "query": "free will and determinism",
+    "relevant_substrings": [
+      "free will",
+      "determinism",
+      "choice",
+      "freedom"
+    ],
+    "methods": {
+      "vector": {
+        "metrics": {
+          "coverage_at_k": 1.0,
+          "precision_at_k": 0.6666666666666666,
+          "mrr_at_k": 1.0,
+          "relevant_retrieved": 2,
+          "total_retrieved": 3
+        },
+        "latency_ms": 0.38909912109375,
+        "results": [
+          {
+            "id": "mock_vector_0",
+            "text": "This document discusses free will and determinism and related philosophical concepts.",
+            "score": 1.0,
+            "relevant": true
+          },
+          {
+            "id": "mock_vector_1",
+            "text": "This document discusses free will and determinism and related philosophical concepts.",
+            "score": 0.85,
+            "relevant": true
+          },
+          {
+            "id": "mock_vector_2",
+            "text": "Here we explore various topics including free.",
+            "score": 0.7,
+            "relevant": false
+          }
+        ]
+      },
+      "bm25": {
+        "metrics": {
+          "coverage_at_k": 1.0,
+          "precision_at_k": 0.6666666666666666,
+          "mrr_at_k": 1.0,
+          "relevant_retrieved": 2,
+          "total_retrieved": 3
+        },
+        "latency_ms": 0.3752708435058594,
+        "results": [
+          {
+            "id": "mock_bm25_0",
+            "text": "This document discusses free will and determinism and related philosophical concepts.",
+            "score": 1.0,
+            "relevant": true
+          },
+          {
+            "id": "mock_bm25_1",
+            "text": "This document discusses free will and determinism and related philosophical concepts.",
+            "score": 0.85,
+            "relevant": true
+          },
+          {
+            "id": "mock_bm25_2",
+            "text": "Here we explore various topics including free.",
+            "score": 0.7,
+            "relevant": false
+          }
+        ]
+      },
+      "hybrid": {
+        "metrics": {
+          "coverage_at_k": 1.0,
+          "precision_at_k": 0.6666666666666666,
+          "mrr_at_k": 1.0,
+          "relevant_retrieved": 2,
+          "total_retrieved": 3
+        },
+        "latency_ms": 0.3681182861328125,
+        "results": [
+          {
+            "id": "mock_hybrid_0",
+            "text": "This document discusses free will and determinism and related philosophical concepts.",
+            "score": 1.0,
+            "relevant": true
+          },
+          {
+            "id": "mock_hybrid_1",
+            "text": "This document discusses free will and determinism and related philosophical concepts.",
+            "score": 0.85,
+            "relevant": true
+          },
+          {
+            "id": "mock_hybrid_2",
+            "text": "Here we explore various topics including free.",
+            "score": 0.7,
+            "relevant": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "query": "ethics and morality",
+    "relevant_substrings": [
+      "ethics",
+      "morality",
+      "moral",
+      "ethical",
+      "right",
+      "wrong"
+    ],
+    "methods": {
+      "vector": {
+        "metrics": {
+          "coverage_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "relevant_retrieved": 3,
+          "total_retrieved": 3
+        },
+        "latency_ms": 0.4048347473144531,
+        "results": [
+          {
+            "id": "mock_vector_0",
+            "text": "This document discusses ethics and morality and related philosophical concepts.",
+            "score": 1.0,
+            "relevant": true
+          },
+          {
+            "id": "mock_vector_1",
+            "text": "This document discusses ethics and morality and related philosophical concepts.",
+            "score": 0.85,
+            "relevant": true
+          },
+          {
+            "id": "mock_vector_2",
+            "text": "Here we explore various topics including ethics.",
+            "score": 0.7,
+            "relevant": true
+          }
+        ]
+      },
+      "bm25": {
+        "metrics": {
+          "coverage_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "relevant_retrieved": 3,
+          "total_retrieved": 3
+        },
+        "latency_ms": 0.3809928894042969,
+        "results": [
+          {
+            "id": "mock_bm25_0",
+            "text": "This document discusses ethics and morality and related philosophical concepts.",
+            "score": 1.0,
+            "relevant": true
+          },
+          {
+            "id": "mock_bm25_1",
+            "text": "This document discusses ethics and morality and related philosophical concepts.",
+            "score": 0.85,
+            "relevant": true
+          },
+          {
+            "id": "mock_bm25_2",
+            "text": "Here we explore various topics including ethics.",
+            "score": 0.7,
+            "relevant": true
+          }
+        ]
+      },
+      "hybrid": {
+        "metrics": {
+          "coverage_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "relevant_retrieved": 3,
+          "total_retrieved": 3
+        },
+        "latency_ms": 0.4184246063232422,
+        "results": [
+          {
+            "id": "mock_hybrid_0",
+            "text": "This document discusses ethics and morality and related philosophical concepts.",
+            "score": 1.0,
+            "relevant": true
+          },
+          {
+            "id": "mock_hybrid_1",
+            "text": "This document discusses ethics and morality and related philosophical concepts.",
+            "score": 0.85,
+            "relevant": true
+          },
+          {
+            "id": "mock_hybrid_2",
+            "text": "Here we explore various topics including ethics.",
+            "score": 0.7,
+            "relevant": true
+          }
+        ]
+      }
+    }
+  }
+]
