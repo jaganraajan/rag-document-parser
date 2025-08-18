@@ -1,23 +1,35 @@
-# Flask Template
+# RAG Document Parser
 
-This sample repo contains the recommended structure for a Python Flask project. In this sample, we use `flask` to build a web application and the `pytest` to run tests.
+## Project Description
+RAG Document Parser is a tool designed to parse and process documents efficiently using Retrieval-Augmented Generation (RAG) techniques. It supports various document formats and provides structured outputs for downstream applications. The tool is modular and can be extended to include advanced features for enhanced functionality.
 
- For a more in-depth tutorial, see our [Flask tutorial](https://code.visualstudio.com/docs/python/tutorial-flask).
+## Installation
+To install the project dependencies, run:
+```bash
+pip install -r requirements.txt
+```
 
- The code in this repo aims to follow Python style guidelines as outlined in [PEP 8](https://peps.python.org/pep-0008/).
+## Usage
+Here is an example of how to use the RAG Document Parser:
+```python
+from rag_document_parser import DocumentParser
 
-## Running the Sample
+parser = DocumentParser()
+result = parser.parse("path/to/document.pdf")
+print(result)
+```
 
-To successfully run this example, we recommend the following VS Code extensions:
+## Extending the Project
+The RAG Document Parser can be extended with the following features:
 
-- [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
-- [Python Debugger](https://marketplace.visualstudio.com/items?itemName=ms-python.debugpy)
-- [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) 
+### 1. Reranking with Cross-Encoder
+Enhance the retrieval process by adding a reranking step using a cross-encoder. After retrieving the initial `top_k` documents, use a cross-encoder model to rerank the results based on relevance.
 
-- Open the template folder in VS Code (**File** > **Open Folder...**)
-- Create a Python virtual environment using the **Python: Create Environment** command found in the Command Palette (**View > Command Palette**). Ensure you install dependencies found in the `pyproject.toml` file
-- Ensure your newly created environment is selected using the **Python: Select Interpreter** command found in the Command Palette
-- Run the app using the Run and Debug view or by pressing `F5`
-- To test your app, ensure you have the dependencies from `dev-requirements.txt` installed in your environment
-- Navigate to the Test Panel to configure your Python test or by triggering the **Python: Configure Tests** command from the Command Palette
-- Run tests in the Test Panel or by clicking the Play Button next to the individual tests in the `test_app.py` file
+### 2. Hybrid Retrieval
+Combine classical and dense retrieval methods by storing text in a classical index (e.g., Elasticsearch) while also leveraging dense embeddings. This hybrid approach improves retrieval accuracy and robustness.
+
+### 3. Generation Layer with Prompt Templates
+Incorporate a generation layer using a Large Language Model (LLM). Use prompt templates that reference retrieved chunks to generate coherent and contextually relevant outputs.
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.
