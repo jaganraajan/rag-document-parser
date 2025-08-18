@@ -2,3 +2,4 @@ flask
 PyPDF2
 pinecone
 python-dotenv
+rank-bm25
