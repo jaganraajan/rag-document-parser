@@ -11,12 +11,12 @@
       "vector": {
         "metrics": {
           "coverage_at_k": 1.0,
-          "precision_at_k": 0.6,
+          "precision_at_k": 1.0,
           "mrr_at_k": 1.0,
           "relevant_retrieved": 3,
-          "total_retrieved": 5
+          "total_retrieved": 3
         },
-        "latency_ms": 7.83228874206543,
+        "latency_ms": 8.597612380981445,
         "results": [
           {
             "id": "mock_vector_0",
@@ -35,30 +35,18 @@
             "text": "Here we explore various topics including existential.",
             "score": 0.7,
             "relevant": true
-          },
-          {
-            "id": "mock_vector_3",
-            "text": "This is a document about completely different topic 3.",
-            "score": 0.55,
-            "relevant": false
-          },
-          {
-            "id": "mock_vector_4",
-            "text": "This is a document about completely different topic 4.",
-            "score": 0.4,
-            "relevant": false
           }
         ]
       },
       "bm25": {
         "metrics": {
           "coverage_at_k": 1.0,
-          "precision_at_k": 0.6,
+          "precision_at_k": 1.0,
           "mrr_at_k": 1.0,
           "relevant_retrieved": 3,
-          "total_retrieved": 5
+          "total_retrieved": 3
         },
-        "latency_ms": 0.4665851593017578,
+        "latency_ms": 0.44083595275878906,
         "results": [
           {
             "id": "mock_bm25_0",
@@ -77,30 +65,18 @@
             "text": "Here we explore various topics including existential.",
             "score": 0.7,
             "relevant": true
-          },
-          {
-            "id": "mock_bm25_3",
-            "text": "This is a document about completely different topic 3.",
-            "score": 0.55,
-            "relevant": false
-          },
-          {
-            "id": "mock_bm25_4",
-            "text": "This is a document about completely different topic 4.",
-            "score": 0.4,
-            "relevant": false
           }
         ]
       },
       "hybrid": {
         "metrics": {
           "coverage_at_k": 1.0,
-          "precision_at_k": 0.6,
+          "precision_at_k": 1.0,
           "mrr_at_k": 1.0,
           "relevant_retrieved": 3,
-          "total_retrieved": 5
+          "total_retrieved": 3
         },
-        "latency_ms": 0.45013427734375,
+        "latency_ms": 0.4451274871826172,
         "results": [
           {
             "id": "mock_hybrid_0",
@@ -119,18 +95,6 @@
             "text": "Here we explore various topics including existential.",
             "score": 0.7,
             "relevant": true
-          },
-          {
-            "id": "mock_hybrid_3",
-            "text": "This is a document about completely different topic 3.",
-            "score": 0.55,
-            "relevant": false
-          },
-          {
-            "id": "mock_hybrid_4",
-            "text": "This is a document about completely different topic 4.",
-            "score": 0.4,
-            "relevant": false
           }
         ]
       }
@@ -148,12 +112,12 @@
       "vector": {
         "metrics": {
           "coverage_at_k": 1.0,
-          "precision_at_k": 0.6,
+          "precision_at_k": 1.0,
           "mrr_at_k": 1.0,
           "relevant_retrieved": 3,
-          "total_retrieved": 5
+          "total_retrieved": 3
         },
-        "latency_ms": 0.4379749298095703,
+        "latency_ms": 0.4062652587890625,
         "results": [
           {
             "id": "mock_vector_0",
@@ -172,30 +136,18 @@
             "text": "Here we explore various topics including consciousness.",
             "score": 0.7,
             "relevant": true
-          },
-          {
-            "id": "mock_vector_3",
-            "text": "This is a document about completely different topic 3.",
-            "score": 0.55,
-            "relevant": false
-          },
-          {
-            "id": "mock_vector_4",
-            "text": "This is a document about completely different topic 4.",
-            "score": 0.4,
-            "relevant": false
           }
         ]
       },
       "bm25": {
         "metrics": {
           "coverage_at_k": 1.0,
-          "precision_at_k": 0.6,
+          "precision_at_k": 1.0,
           "mrr_at_k": 1.0,
           "relevant_retrieved": 3,
-          "total_retrieved": 5
+          "total_retrieved": 3
         },
-        "latency_ms": 0.42891502380371094,
+        "latency_ms": 0.4200935363769531,
         "results": [
           {
             "id": "mock_bm25_0",
@@ -214,30 +166,18 @@
             "text": "Here we explore various topics including consciousness.",
             "score": 0.7,
             "relevant": true
-          },
-          {
-            "id": "mock_bm25_3",
-            "text": "This is a document about completely different topic 3.",
-            "score": 0.55,
-            "relevant": false
-          },
-          {
-            "id": "mock_bm25_4",
-            "text": "This is a document about completely different topic 4.",
-            "score": 0.4,
-            "relevant": false
           }
         ]
       },
       "hybrid": {
         "metrics": {
           "coverage_at_k": 1.0,
-          "precision_at_k": 0.6,
+          "precision_at_k": 1.0,
           "mrr_at_k": 1.0,
           "relevant_retrieved": 3,
-          "total_retrieved": 5
+          "total_retrieved": 3
         },
-        "latency_ms": 0.4088878631591797,
+        "latency_ms": 0.40721893310546875,
         "results": [
           {
             "id": "mock_hybrid_0",
@@ -256,18 +196,6 @@
             "text": "Here we explore various topics including consciousness.",
             "score": 0.7,
             "relevant": true
-          },
-          {
-            "id": "mock_hybrid_3",
-            "text": "This is a document about completely different topic 3.",
-            "score": 0.55,
-            "relevant": false
-          },
-          {
-            "id": "mock_hybrid_4",
-            "text": "This is a document about completely different topic 4.",
-            "score": 0.4,
-            "relevant": false
           }
         ]
       }
@@ -285,12 +213,12 @@
       "vector": {
         "metrics": {
           "coverage_at_k": 1.0,
-          "precision_at_k": 0.6,
+          "precision_at_k": 1.0,
           "mrr_at_k": 1.0,
           "relevant_retrieved": 3,
-          "total_retrieved": 5
+          "total_retrieved": 3
         },
-        "latency_ms": 0.4394054412841797,
+        "latency_ms": 0.4763603210449219,
         "results": [
           {
             "id": "mock_vector_0",
@@ -309,30 +237,18 @@
             "text": "Here we explore various topics including truth.",
             "score": 0.7,
             "relevant": true
-          },
-          {
-            "id": "mock_vector_3",
-            "text": "This is a document about completely different topic 3.",
-            "score": 0.55,
-            "relevant": false
-          },
-          {
-            "id": "mock_vector_4",
-            "text": "This is a document about completely different topic 4.",
-            "score": 0.4,
-            "relevant": false
           }
         ]
       },
       "bm25": {
         "metrics": {
           "coverage_at_k": 1.0,
-          "precision_at_k": 0.6,
+          "precision_at_k": 1.0,
           "mrr_at_k": 1.0,
           "relevant_retrieved": 3,
-          "total_retrieved": 5
+          "total_retrieved": 3
         },
-        "latency_ms": 0.40459632873535156,
+        "latency_ms": 0.4334449768066406,
         "results": [
           {
             "id": "mock_bm25_0",
@@ -351,30 +267,18 @@
             "text": "Here we explore various topics including truth.",
             "score": 0.7,
             "relevant": true
-          },
-          {
-            "id": "mock_bm25_3",
-            "text": "This is a document about completely different topic 3.",
-            "score": 0.55,
-            "relevant": false
-          },
-          {
-            "id": "mock_bm25_4",
-            "text": "This is a document about completely different topic 4.",
-            "score": 0.4,
-            "relevant": false
           }
         ]
       },
       "hybrid": {
         "metrics": {
           "coverage_at_k": 1.0,
-          "precision_at_k": 0.6,
+          "precision_at_k": 1.0,
           "mrr_at_k": 1.0,
           "relevant_retrieved": 3,
-          "total_retrieved": 5
+          "total_retrieved": 3
         },
-        "latency_ms": 0.41484832763671875,
+        "latency_ms": 0.38123130798339844,
         "results": [
           {
             "id": "mock_hybrid_0",
@@ -393,18 +297,6 @@
             "text": "Here we explore various topics including truth.",
             "score": 0.7,
             "relevant": true
-          },
-          {
-            "id": "mock_hybrid_3",
-            "text": "This is a document about completely different topic 3.",
-            "score": 0.55,
-            "relevant": false
-          },
-          {
-            "id": "mock_hybrid_4",
-            "text": "This is a document about completely different topic 4.",
-            "score": 0.4,
-            "relevant": false
           }
         ]
       }
@@ -422,12 +314,12 @@
       "vector": {
         "metrics": {
           "coverage_at_k": 1.0,
-          "precision_at_k": 0.4,
+          "precision_at_k": 0.6666666666666666,
           "mrr_at_k": 1.0,
           "relevant_retrieved": 2,
-          "total_retrieved": 5
+          "total_retrieved": 3
         },
-        "latency_ms": 0.4227161407470703,
+        "latency_ms": 0.38909912109375,
         "results": [
           {
             "id": "mock_vector_0",
@@ -446,30 +338,18 @@
             "text": "Here we explore various topics including free.",
             "score": 0.7,
             "relevant": false
-          },
-          {
-            "id": "mock_vector_3",
-            "text": "This is a document about completely different topic 3.",
-            "score": 0.55,
-            "relevant": false
-          },
-          {
-            "id": "mock_vector_4",
-            "text": "This is a document about completely different topic 4.",
-            "score": 0.4,
-            "relevant": false
           }
         ]
       },
       "bm25": {
         "metrics": {
           "coverage_at_k": 1.0,
-          "precision_at_k": 0.4,
+          "precision_at_k": 0.6666666666666666,
           "mrr_at_k": 1.0,
           "relevant_retrieved": 2,
-          "total_retrieved": 5
+          "total_retrieved": 3
         },
-        "latency_ms": 0.3871917724609375,
+        "latency_ms": 0.3752708435058594,
         "results": [
           {
             "id": "mock_bm25_0",
@@ -488,30 +368,18 @@
             "text": "Here we explore various topics including free.",
             "score": 0.7,
             "relevant": false
-          },
-          {
-            "id": "mock_bm25_3",
-            "text": "This is a document about completely different topic 3.",
-            "score": 0.55,
-            "relevant": false
-          },
-          {
-            "id": "mock_bm25_4",
-            "text": "This is a document about completely different topic 4.",
-            "score": 0.4,
-            "relevant": false
           }
         ]
       },
       "hybrid": {
         "metrics": {
           "coverage_at_k": 1.0,
-          "precision_at_k": 0.4,
+          "precision_at_k": 0.6666666666666666,
           "mrr_at_k": 1.0,
           "relevant_retrieved": 2,
-          "total_retrieved": 5
+          "total_retrieved": 3
         },
-        "latency_ms": 0.5197525024414062,
+        "latency_ms": 0.3681182861328125,
         "results": [
           {
             "id": "mock_hybrid_0",
@@ -529,18 +397,6 @@
             "id": "mock_hybrid_2",
             "text": "Here we explore various topics including free.",
             "score": 0.7,
-            "relevant": false
-          },
-          {
-            "id": "mock_hybrid_3",
-            "text": "This is a document about completely different topic 3.",
-            "score": 0.55,
-            "relevant": false
-          },
-          {
-            "id": "mock_hybrid_4",
-            "text": "This is a document about completely different topic 4.",
-            "score": 0.4,
             "relevant": false
           }
         ]
@@ -561,12 +417,12 @@
       "vector": {
         "metrics": {
           "coverage_at_k": 1.0,
-          "precision_at_k": 0.6,
+          "precision_at_k": 1.0,
           "mrr_at_k": 1.0,
           "relevant_retrieved": 3,
-          "total_retrieved": 5
+          "total_retrieved": 3
         },
-        "latency_ms": 0.40435791015625,
+        "latency_ms": 0.4048347473144531,
         "results": [
           {
             "id": "mock_vector_0",
@@ -585,30 +441,18 @@
             "text": "Here we explore various topics including ethics.",
             "score": 0.7,
             "relevant": true
-          },
-          {
-            "id": "mock_vector_3",
-            "text": "This is a document about completely different topic 3.",
-            "score": 0.55,
-            "relevant": false
-          },
-          {
-            "id": "mock_vector_4",
-            "text": "This is a document about completely different topic 4.",
-            "score": 0.4,
-            "relevant": false
           }
         ]
       },
       "bm25": {
         "metrics": {
           "coverage_at_k": 1.0,
-          "precision_at_k": 0.6,
+          "precision_at_k": 1.0,
           "mrr_at_k": 1.0,
           "relevant_retrieved": 3,
-          "total_retrieved": 5
+          "total_retrieved": 3
         },
-        "latency_ms": 0.41365623474121094,
+        "latency_ms": 0.3809928894042969,
         "results": [
           {
             "id": "mock_bm25_0",
@@ -627,30 +471,18 @@
             "text": "Here we explore various topics including ethics.",
             "score": 0.7,
             "relevant": true
-          },
-          {
-            "id": "mock_bm25_3",
-            "text": "This is a document about completely different topic 3.",
-            "score": 0.55,
-            "relevant": false
-          },
-          {
-            "id": "mock_bm25_4",
-            "text": "This is a document about completely different topic 4.",
-            "score": 0.4,
-            "relevant": false
           }
         ]
       },
       "hybrid": {
         "metrics": {
           "coverage_at_k": 1.0,
-          "precision_at_k": 0.6,
+          "precision_at_k": 1.0,
           "mrr_at_k": 1.0,
           "relevant_retrieved": 3,
-          "total_retrieved": 5
+          "total_retrieved": 3
         },
-        "latency_ms": 0.3910064697265625,
+        "latency_ms": 0.4184246063232422,
         "results": [
           {
             "id": "mock_hybrid_0",
@@ -669,18 +501,6 @@
             "text": "Here we explore various topics including ethics.",
             "score": 0.7,
             "relevant": true
-          },
-          {
-            "id": "mock_hybrid_3",
-            "text": "This is a document about completely different topic 3.",
-            "score": 0.55,
-            "relevant": false
-          },
-          {
-            "id": "mock_hybrid_4",
-            "text": "This is a document about completely different topic 4.",
-            "score": 0.4,
-            "relevant": false
           }
         ]
       }
