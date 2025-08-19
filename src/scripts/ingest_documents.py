@@ -7,6 +7,7 @@ from src.ingestion.metadata_schema import extract_metadata
 from src.ingestion.normalizer import normalize_metadata
 from src.ingestion.chunk_document import chunk_document
 from src.storage.vector_store import store_vectors
+from src.storage.sparse_store import sparse_store
 # from src.logging_utils.audit_logger import log_event
 
 def ingest_documents(directory):
@@ -29,12 +30,22 @@ def ingest_documents(directory):
             # Chunk text
             chunks = chunk_document(pdf_content, normalized_metadata)
             print(f'Chunks created: {len(chunks)}')
-            # print(chunks[:2])
             
-            # Store vectors
-            # vector_ids = store_vectors(chunks, normalized_metadata)
+            # Assign consistent IDs to chunks for both dense and sparse storage
+            import uuid
+            for chunk in chunks:
+                chunk['id'] = str(uuid.uuid4())
+            
+            # Store dense vectors
             vector_ids = store_vectors(chunks)
-            # print(f'Stored {len(vector_ids)} vectors for {filename}.')
+            print(f'Stored {len(chunks)} dense vectors for {filename}.')
+            
+            # Store sparse vectors
+            try:
+                sparse_store.upsert_sparse_vectors(chunks)
+                print(f'Stored {len(chunks)} sparse vectors for {filename}.')
+            except Exception as e:
+                print(f'Warning: Failed to store sparse vectors for {filename}: {e}')
             
             # # Log the ingestion event
             # log_event(f'Document ingested: {filename}', metadata)
