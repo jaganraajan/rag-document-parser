@@ -13,7 +13,7 @@
     <div class="result">
       <div class="meta">
         <span class="score">Score: {{ "%.4f"|format(r.score) }}</span> |
-        Page: {{ r.page_number or "?" }}, Paragraph: {{ r.paragraph_index or "?" }} |
+        Page: {{ r.page_number|int if r.page_number is not none else "?" }}, Paragraph: {{ r.paragraph_index|int if r.paragraph_index is not none else "?" }} |
         Source: {{ r.source_file or "?" }}
       </div>
       <div class="snippet">
