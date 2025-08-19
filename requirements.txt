@@ -3,3 +3,4 @@ PyPDF2
 pinecone
 python-dotenv
 gunicorn
+google-generativeai
