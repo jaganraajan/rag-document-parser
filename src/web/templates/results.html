@@ -4,7 +4,23 @@
     <input type="text" name="q" value="{{ query }}" size="50">
     <input type="number" name="k" value="{{ k }}" min="1" max="20" style="width:5rem">
     <button type="submit">Search</button>
+    {% if results|length > 0 %}
+    <button type="button" id="generate-answer-btn" onclick="generateAnswer()">Generate Answer</button>
+    {% endif %}
   </form>
+  
+  <!-- Answer display area -->
+  {% if results|length > 0 %}
+  <div id="generated-answer" style="display: none; margin: 1.5rem 0; padding: 1rem; border: 2px solid #007bff; border-radius: 6px; background-color: #f8f9fa;">
+    <h3>Generated Answer:</h3>
+    <div id="answer-content"></div>
+  </div>
+  
+  <div id="loading-spinner" style="display: none; margin: 1rem 0; text-align: center;">
+    <p>Generating answer...</p>
+  </div>
+  {% endif %}
+  
   <h2>Results ({{ results|length }})</h2>
   {% if results|length == 0 %}
     <p>No matches found.</p>
@@ -21,4 +37,54 @@
       </div>
     </div>
   {% endfor %}
+  
+  {% if results|length > 0 %}
+  <script>
+    async function generateAnswer() {
+      const button = document.getElementById('generate-answer-btn');
+      const loadingSpinner = document.getElementById('loading-spinner');
+      const answerDiv = document.getElementById('generated-answer');
+      const answerContent = document.getElementById('answer-content');
+      
+      // Show loading spinner, hide previous answer, disable button
+      button.disabled = true;
+      button.textContent = 'Generating...';
+      loadingSpinner.style.display = 'block';
+      answerDiv.style.display = 'none';
+      
+      try {
+        const response = await fetch('/generate_answer', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query: '{{ query }}'
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.answer) {
+          // Display the answer
+          answerContent.innerHTML = '<p>' + data.answer.replace(/\n/g, '</p><p>') + '</p>';
+          answerDiv.style.display = 'block';
+        } else {
+          // Display error
+          answerContent.innerHTML = '<p style="color: red;">Error: ' + (data.error || 'Failed to generate answer') + '</p>';
+          answerDiv.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        answerContent.innerHTML = '<p style="color: red;">Error: Failed to connect to server</p>';
+        answerDiv.style.display = 'block';
+      } finally {
+        // Re-enable button and hide loading spinner
+        button.disabled = false;
+        button.textContent = 'Generate Answer';
+        loadingSpinner.style.display = 'none';
+      }
+    }
+  </script>
+  {% endif %}
 {% endblock %}

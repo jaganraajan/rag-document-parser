@@ -2,6 +2,7 @@ import os
 from flask import Flask, request, render_template, jsonify
 from ..storage.search_wrapper import search_with_metadata
 from dotenv import load_dotenv
+import google.generativeai as genai
 load_dotenv()
 
 
@@ -14,6 +15,39 @@ except ImportError:
 app = Flask(__name__)
 if select_config:
     app.config.from_object(select_config())
+
+# Configure Gemini AI
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+if GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
+    GEMINI_MODEL_NAME = "gemini-pro"
+else:
+    print("Warning: GEMINI_API_KEY not set. Answer generation will not work.")
+
+def truncate_text(text: str, max_chars: int = 500) -> str:
+    """Truncate text to a maximum number of characters."""
+    if len(text) <= max_chars:
+        return text
+    return text[:max_chars] + "..."
+
+def build_context_from_results(results, max_total_chars: int = 8000) -> str:
+    """Build context string from search results with truncation."""
+    context_parts = []
+    total_chars = 0
+    
+    for i, result in enumerate(results):
+        chunk_text = result.get("text", "")
+        truncated_chunk = truncate_text(chunk_text, 500)
+        
+        chunk_section = f"\n--- Chunk {i+1} ---\n{truncated_chunk}"
+        
+        if total_chars + len(chunk_section) > max_total_chars:
+            break
+            
+        context_parts.append(chunk_section)
+        total_chars += len(chunk_section)
+    
+    return "\n".join(context_parts)
 
 def highlight(text: str, query: str):
     """
@@ -69,6 +103,56 @@ def api_search():
     #     "top_k": k,
     #     "results": results
     # })
+
+@app.route("/generate_answer", methods=["POST"])
+def generate_answer():
+    """Generate an answer using Gemini AI from retrieved context."""
+    try:
+        # Check if Gemini API key is configured
+        if not GEMINI_API_KEY:
+            return jsonify({"error": "Gemini API key not configured"}), 500
+        
+        # Get query from request JSON
+        data = request.get_json()
+        if not data or "query" not in data:
+            return jsonify({"error": "Missing query in request body"}), 400
+        
+        query = data["query"].strip()
+        if not query:
+            return jsonify({"error": "Query cannot be empty"}), 400
+        
+        # Retrieve context using semantic search
+        top_k = 5  # configurable
+        results = search_with_metadata(query, top_k=top_k)
+        
+        if not results:
+            return jsonify({"error": "No relevant context found"}), 400
+        
+        # Build context from retrieved chunks
+        context = build_context_from_results(results)
+        
+        # Construct prompt for Gemini
+        prompt = f"""You are a helpful assistant. Use ONLY the provided context to answer the user query. If the answer is not in the context, say you do not have enough information.
+
+Query: {query}
+
+Context:
+{context}
+
+Answer:"""
+        
+        # Call Gemini API
+        model = genai.GenerativeModel(GEMINI_MODEL_NAME)
+        response = model.generate_content(prompt)
+        
+        if not response or not response.text:
+            return jsonify({"error": "Failed to generate answer"}), 500
+        
+        return jsonify({"answer": response.text.strip()})
+        
+    except Exception as e:
+        print(f"Error generating answer: {str(e)}")
+        return jsonify({"error": "An error occurred while generating the answer"}), 500
 
 if __name__ == "__main__":
     # Dev only (Gunicorn will NOT execute this block)
