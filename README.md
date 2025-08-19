@@ -9,6 +9,32 @@ To install the project dependencies, run:
 pip install -r requirements.txt
 ```
 
+## Environment Variables
+The following environment variables are required:
+
+- **PINECONE_API_KEY**: Your Pinecone API key for vector storage and semantic search
+- **GEMINI_API_KEY**: Your Google Gemini API key for AI-powered answer generation
+
+Create a `.env` file in the project root with these variables:
+```bash
+PINECONE_API_KEY=your_pinecone_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+## Running the Web Interface
+To start the Flask web interface:
+```bash
+FLASK_APP=src/web/app.py flask run
+```
+
+Then navigate to `http://localhost:5000` in your browser to access the RAG search interface.
+
+### Web Interface Features
+- **Semantic Search**: Enter queries to search through ingested documents using vector similarity
+- **Search Results**: View retrieved document chunks with relevance scores and metadata
+- **AI Answer Generation**: Click "Generate Answer" to get AI-powered responses based on retrieved context
+- **Real-time Interaction**: Generate answers without page reloads using AJAX
+
 ## Usage
 Here is an example of how to use the RAG Document Parser:
 ```python
