@@ -4,8 +4,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # from src.storage.search_wrapper import search_with_metadata
+# Optional config usage
+try:
+    from src.web.config import select_config
+except ImportError:
+    select_config = None
 
 app = Flask(__name__)
+if select_config:
+    app.config.from_object(select_config())
 
 def highlight(text: str, query: str):
     """
@@ -23,6 +30,10 @@ def highlight(text: str, query: str):
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/healthz")
+def healthz():
+    return {"status": "ok"}, 200
 
 @app.route("/search")
 def search():
@@ -54,5 +65,6 @@ def api_search():
     # })
 
 if __name__ == "__main__":
+    # Dev only (Gunicorn will NOT execute this block)
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
