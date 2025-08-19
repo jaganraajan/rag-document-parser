@@ -55,8 +55,10 @@ def to_records(chunks: Iterable[Dict]) -> List[Dict]:
     records = []
     for c in chunks:
         metadata = _flatten_metadata(c.get("metadata", {}))
+        # Use existing ID if provided, otherwise generate new one
+        chunk_id = c.get("id") or str(uuid.uuid4())
         records.append({
-            "id": str(uuid.uuid4()),
+            "id": chunk_id,
             "chunk_text": c.get("chunk"),      # field mapped to 'text'
             **metadata
         })
