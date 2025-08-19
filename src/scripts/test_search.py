@@ -5,7 +5,7 @@ from src.storage.vector_store import semantic_query
 
 if __name__ == '__main__':
     # A sentence (or fragment) you expect exists in a chunk
-    query = "existential meaning"
+    query = "existential meaning life"
 
     # Search the dense index
     results = semantic_query(query)

@@ -1,12 +1,13 @@
 import os
 from flask import Flask, request, render_template, jsonify
+from ..storage.search_wrapper import search_with_metadata
 from dotenv import load_dotenv
 load_dotenv()
 
-# from src.storage.search_wrapper import search_with_metadata
+
 # Optional config usage
 try:
-    from src.web.config import select_config
+    from src.web.config import select_config 
 except ImportError:
     select_config = None
 
@@ -44,11 +45,12 @@ def search():
         k = int(request.args.get("k", 5))
     except ValueError:
         k = 5
-    # results = search_with_metadata(q, top_k=k)
-    # # Add highlighted text
-    # for r in results:
-    #     r["highlighted"] = highlight(r["text"], q)
-    return render_template("results.html", query=q, results=[], k=k)
+
+    results = search_with_metadata(q, top_k=k)
+    # Add highlighted text
+    for r in results:
+        r["highlighted"] = highlight(r["text"], q)
+    return render_template("results.html", query=q, results=results, k=k)
 
 @app.route("/api/search")
 def api_search():

@@ -74,7 +74,7 @@ def store_vectors(chunks: Iterable[Dict]):
         index.upsert_records(NAMESPACE, batch)
 
 
-def semantic_query(query: str):
+def semantic_query(query: str, top_k: int = 5) -> List[Dict[str, any]]:
     index = ensure_index()
     print('search for query:', query)
     # Search the dense index
@@ -84,7 +84,7 @@ def semantic_query(query: str):
             "inputs": {
                 "text": query
             },
-            "top_k": 5
+            "top_k": top_k
         }
     )
 
