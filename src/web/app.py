@@ -20,7 +20,7 @@ if select_config:
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
-    GEMINI_MODEL_NAME = "gemini-pro"
+    GEMINI_MODEL_NAME = "gemini-2.5-flash"
 else:
     print("Warning: GEMINI_API_KEY not set. Answer generation will not work.")
 
