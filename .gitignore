@@ -18,6 +18,7 @@ instance/
 
 # data files (not docs directory)
 docs/test/
+docs/pdfs
 sample_evaluation.json
 sample_evaluation.csv
 .DS_Store

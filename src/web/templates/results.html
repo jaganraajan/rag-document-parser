@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+  <form class="search" action="/search" method="get">
+    <input type="text" name="q" value="{{ query }}" size="50">
+    <input type="number" name="k" value="{{ k }}" min="1" max="20" style="width:5rem">
+    <button type="submit">Search</button>
+  </form>
+  <h2>Results ({{ results|length }})</h2>
+  {% if results|length == 0 %}
+    <p>No matches found.</p>
+  {% endif %}
+  {% for r in results %}
+    <div class="result">
+      <div class="meta">
+        <span class="score">Score: {{ "%.4f"|format(r.score) }}</span> |
+        Page: {{ r.page_number or "?" }}, Paragraph: {{ r.paragraph_index or "?" }} |
+        Source: {{ r.source_file or "?" }}
+      </div>
+      <div class="snippet">
+        {{ r.highlighted|safe }}
+      </div>
+    </div>
+  {% endfor %}
+{% endblock %}
