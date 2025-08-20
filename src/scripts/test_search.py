@@ -1,6 +1,7 @@
 # Define the query
 from dotenv import load_dotenv  # dev dependency
 load_dotenv()
+from src.storage.sparse_store import sparse_query
 from src.storage.vector_store import semantic_query
 
 if __name__ == '__main__':
@@ -8,7 +9,8 @@ if __name__ == '__main__':
     query = "existential meaning life"
 
     # Search the dense index
-    results = semantic_query(query)
+    # results = semantic_query(query)
+    results = sparse_query(query)
     print('results are')
     print(results)
 

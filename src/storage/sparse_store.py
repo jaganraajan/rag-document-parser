@@ -87,10 +87,11 @@ def sparse_query(query_text: str, top_k: int = 10, filter: Optional[Dict] = None
     Query sparse index letting Pinecone embed query with sparse model.
     """
     index = ensure_sparse_index()
-    return index.query(
-        text=query_text,
-        top_k=top_k,
-        namespace=NAMESPACE,
-        include_metadata=True,
-        filter=filter
+
+    return index.search(
+        namespace=NAMESPACE, 
+        query={
+            "inputs": {"text": query_text}, 
+            "top_k": top_k
+        }
     )
