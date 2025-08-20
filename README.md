@@ -57,5 +57,8 @@ Combine classical and dense retrieval methods by storing text in a classical ind
 ### 3. Generation Layer with Prompt Templates
 Incorporate a generation layer using a Large Language Model (LLM). Use prompt templates that reference retrieved chunks to generate coherent and contextually relevant outputs.
 
+## Architecture Decisions
+See [docs/adr/README.md](docs/adr/README.md) for Architecture Decision Records documenting key technical choices.
+
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
