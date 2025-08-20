@@ -1,19 +1,16 @@
-# Define the query
-from dotenv import load_dotenv  # dev dependency
+from dotenv import load_dotenv
 load_dotenv()
-from src.storage.sparse_store import sparse_query
+from src.storage.sparse_store import sparse_query  # if exists
 from src.storage.vector_store import semantic_query
+from src.observability.tracing import init_tracing, get_tracer
+
+init_tracing(console=True)
+tracer = get_tracer()
 
 if __name__ == '__main__':
-    # A sentence (or fragment) you expect exists in a chunk
     query = "existential meaning life"
-
-    # Search the dense index
-    # results = semantic_query(query)
-    results = sparse_query(query)
-    print('results are')
-    print(results)
-
-    # # Print the results
-    # for hit in results['result']['hits']:
-    #         print(f"id: {hit['_id']:<5} | score: {round(hit['_score'], 2):<5} | category: {hit['fields']['category']:<10} | text: {hit['fields']['chunk_text']:<50}")
+    with tracer.start_as_current_span("cli.search"):
+        # results = sparse_query(query) if False else semantic_query(query)
+        results = semantic_query(query)
+        # print('results are')
+        # print(results)
