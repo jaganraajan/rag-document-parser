@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
 from src.ingestion.extract_paragraphs import extract_paragraphs
@@ -8,6 +9,7 @@ from src.ingestion.metadata_schema import extract_metadata
 from src.ingestion.normalizer import normalize_metadata
 from src.ingestion.paragraph_utils import paragraphize
 from src.storage.vector_store import store_vectors
+from src.storage.sparse_store import store_sparse_vectors
 
 def ingest_documents_with_pages(directory):
     """
@@ -43,6 +45,8 @@ def ingest_documents_with_pages(directory):
         # print(paragraph_records)
         if paragraph_records:
             store_vectors(paragraph_records)
+            store_sparse_vectors(paragraph_records)
+
 
 if __name__ == '__main__':
     directory = './docs/test'  # Adjust path
