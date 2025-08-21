@@ -3,6 +3,12 @@ from typing import Iterable, List, Dict
 # from .id_strategy import IDStrategy
 import uuid
 import os
+import time
+from src.observability.instruments import (
+    queries_total, query_errors_total,
+    query_end_to_end_seconds, vector_search_seconds,
+    retrieval_result_count
+)
 
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 if not PINECONE_API_KEY:
@@ -74,18 +80,28 @@ def store_vectors(chunks: Iterable[Dict]):
         index.upsert_records(NAMESPACE, batch)
 
 
-def semantic_query(query: str, top_k: int = 5) -> List[Dict[str, any]]:
+def semantic_query(query: str, top_k: int = 5):
     index = ensure_index()
-    print('search for query:', query)
-    # Search the dense index
-    results = index.search(
-        namespace=NAMESPACE,
-        query={
-            "inputs": {
-                "text": query
-            },
-            "top_k": top_k
-        }
-    )
+    queries_total.add(1, {"top_k": str(top_k)})
+    q_start = time.perf_counter()
+    try:
+        vs_start = time.perf_counter()
+        results = index.search(
+            namespace=NAMESPACE,
+            query={
+                "inputs": {"text": query},
+                "top_k": top_k
+            }
+        )
+        vector_search_seconds.record(time.perf_counter() - vs_start, {"top_k": str(top_k)})
+        matches = []
+        if isinstance(results, dict):
+            matches = results.get("matches", [])
+        retrieval_result_count.record(len(matches), {"top_k": str(top_k)})
+        query_end_to_end_seconds.record(time.perf_counter() - q_start, {"status": "success", "top_k": str(top_k)})
 
-    return results
+        return results
+    except Exception as e:
+        query_errors_total.add(1, {"error.type": e.__class__.__name__})
+        query_end_to_end_seconds.record(time.perf_counter() - q_start, {"status": "error", "top_k": str(top_k)})
+        raise
