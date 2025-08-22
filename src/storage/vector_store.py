@@ -7,7 +7,10 @@ import time
 from src.observability.instruments import (
     queries_total, query_errors_total,
     query_end_to_end_seconds, vector_search_seconds,
-    retrieval_result_count
+    retrieval_result_count, retrieval_top_score,
+    retrieval_any_result_total, no_result_queries_total,
+    upsert_records_total, upsert_errors_total, upsert_batch_seconds,
+    safe_attrs,
 )
 
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
@@ -70,19 +73,24 @@ def to_records(chunks: Iterable[Dict]) -> List[Dict]:
 
 def store_vectors(chunks: Iterable[Dict]):
     index = ensure_index()
-    # print('index', index)
-    # print(chunks[:2])
     records = to_records(chunks)
-    # Upsert in batches
     batch_size = 100
     for i in range(0, len(records), batch_size):
         batch = records[i:i+batch_size]
-        index.upsert_records(NAMESPACE, batch)
+        t0 = time.perf_counter()
+        try:
+            index.upsert_records(NAMESPACE, batch)
+            elapsed = time.perf_counter() - t0
+            upsert_batch_seconds.record(elapsed, safe_attrs({"index": INDEX_NAME}))
+            upsert_records_total.add(len(batch), safe_attrs({"index": INDEX_NAME}))
+        except Exception as e:
+            upsert_errors_total.add(1, safe_attrs({"error.type": e.__class__.__name__}))
+            raise
 
 
 def semantic_query(query: str, top_k: int = 5):
     index = ensure_index()
-    queries_total.add(1, {"top_k": str(top_k)})
+    queries_total.add(1, safe_attrs({"top_k": str(top_k)}))
     q_start = time.perf_counter()
     try:
         vs_start = time.perf_counter()
@@ -93,15 +101,29 @@ def semantic_query(query: str, top_k: int = 5):
                 "top_k": top_k
             }
         )
-        vector_search_seconds.record(time.perf_counter() - vs_start, {"top_k": str(top_k)})
+        vector_search_seconds.record(time.perf_counter() - vs_start, safe_attrs({"top_k": str(top_k)}))
+
         matches = []
         if isinstance(results, dict):
             matches = results.get("matches", [])
-        retrieval_result_count.record(len(matches), {"top_k": str(top_k)})
-        query_end_to_end_seconds.record(time.perf_counter() - q_start, {"status": "success", "top_k": str(top_k)})
 
+        # Result counts
+        retrieval_result_count.add(len(matches), safe_attrs({"top_k": str(top_k)}))
+        if len(matches) > 0:
+            retrieval_any_result_total.add(1, safe_attrs({}))
+            # try to compute a top score if present
+            try:
+                scores = [m.get("score") for m in matches if isinstance(m, dict) and isinstance(m.get("score"), (int, float))]
+                if scores:
+                    retrieval_top_score.record(max(scores), safe_attrs({}))
+            except Exception:
+                pass
+        else:
+            no_result_queries_total.add(1, safe_attrs({}))
+
+        query_end_to_end_seconds.record(time.perf_counter() - q_start, safe_attrs({"status": "success", "top_k": str(top_k)}))
         return results
     except Exception as e:
-        query_errors_total.add(1, {"error.type": e.__class__.__name__})
-        query_end_to_end_seconds.record(time.perf_counter() - q_start, {"status": "error", "top_k": str(top_k)})
+        query_errors_total.add(1, safe_attrs({"error.type": e.__class__.__name__}))
+        query_end_to_end_seconds.record(time.perf_counter() - q_start, safe_attrs({"status": "error", "top_k": str(top_k)}))
         raise
