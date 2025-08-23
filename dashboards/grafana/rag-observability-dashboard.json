@@ -1,0 +1,164 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "Prometheus data source",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+    ],
+  "__requires": [
+    { "type": "grafana", "id": "grafana", "name": "Grafana", "version": "9.5.0" },
+    { "type": "panel", "id": "timeseries", "name": "Time series", "version": "9.5.0" },
+    { "type": "datasource", "id": "prometheus", "name": "Prometheus", "version": "2.6.0" }
+  ],
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "iteration": 1710000000000,
+  "links": [],
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Docs ingested / min",
+      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
+      "datasource": "${DS_PROMETHEUS}",
+      "targets": [
+        { "expr": "sum(rate(documents_ingested_total[1m]))*60", "legendFormat": "ingested/min" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Ingestion error rate %",
+      "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0},
+      "datasource": "${DS_PROMETHEUS}",
+      "targets": [
+        { "expr": "100 * (sum(rate(ingestion_errors_total[5m])) / (sum(rate(documents_ingested_total[5m])) + sum(rate(ingestion_errors_total[5m]))))", "legendFormat": "error %" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Ingestion duration p50/p95/p99",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+      "datasource": "${DS_PROMETHEUS}",
+      "targets": [
+        { "expr": "histogram_quantile(0.5, sum by (le) (rate(document_ingest_seconds_bucket[5m])))", "legendFormat": "p50" },
+        { "expr": "histogram_quantile(0.95, sum by (le) (rate(document_ingest_seconds_bucket[5m])))", "legendFormat": "p95" },
+        { "expr": "histogram_quantile(0.99, sum by (le) (rate(document_ingest_seconds_bucket[5m])))", "legendFormat": "p99" }
+      ]
+    },
+
+    {
+      "type": "timeseries",
+      "title": "PDF load / metadata / chunking p95",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+      "datasource": "${DS_PROMETHEUS}",
+      "targets": [
+        { "expr": "histogram_quantile(0.95, sum by (le) (rate(pdf_load_seconds_bucket[5m])))", "legendFormat": "pdf_load p95" },
+        { "expr": "histogram_quantile(0.95, sum by (le) (rate(metadata_extract_seconds_bucket[5m])))", "legendFormat": "metadata p95" },
+        { "expr": "histogram_quantile(0.95, sum by (le) (rate(chunking_seconds_bucket[5m])))", "legendFormat": "chunking p95" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Chunks & characters per minute",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12},
+      "datasource": "${DS_PROMETHEUS}",
+      "targets": [
+        { "expr": "sum(rate(chunk_count_total[1m]))", "legendFormat": "chunks/min" },
+        { "expr": "sum(rate(chunk_chars_sum[1m]))", "legendFormat": "chars/min" }
+      ]
+    },
+
+    {
+      "type": "timeseries",
+      "title": "Upsert latency p95",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+      "datasource": "${DS_PROMETHEUS}",
+      "targets": [
+        { "expr": "histogram_quantile(0.95, sum by (le) (rate(upsert_batch_seconds_bucket[5m])))", "legendFormat": "upsert p95" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Upsert throughput & errors",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+      "datasource": "${DS_PROMETHEUS}",
+      "targets": [
+        { "expr": "sum(rate(upsert_records_total[1m]))", "legendFormat": "records/min" },
+        { "expr": "sum(rate(upsert_errors_total[5m]))", "legendFormat": "errors/min" }
+      ]
+    },
+
+    {
+      "type": "timeseries",
+      "title": "Query rate by top_k",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 20},
+      "datasource": "${DS_PROMETHEUS}",
+      "targets": [
+        { "expr": "sum by (top_k) (rate(queries_total[1m]))", "legendFormat": "top_k={{top_k}}" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Query errors (rate)",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 28},
+      "datasource": "${DS_PROMETHEUS}",
+      "targets": [
+        { "expr": "sum(rate(query_errors_total[5m])) by (error_type)", "legendFormat": "{{error_type}}" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Query E2E latency p50/p95/p99",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24},
+      "datasource": "${DS_PROMETHEUS}",
+      "targets": [
+        { "expr": "histogram_quantile(0.5, sum by (le) (rate(query_end_to_end_seconds_bucket[5m])))", "legendFormat": "p50" },
+        { "expr": "histogram_quantile(0.95, sum by (le) (rate(query_end_to_end_seconds_bucket[5m])))", "legendFormat": "p95" },
+        { "expr": "histogram_quantile(0.99, sum by (le) (rate(query_end_to_end_seconds_bucket[5m])))", "legendFormat": "p99" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Vector search p95",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 32},
+      "datasource": "${DS_PROMETHEUS}",
+      "targets": [
+        { "expr": "histogram_quantile(0.95, sum by (le) (rate(vector_search_seconds_bucket[5m])))", "legendFormat": "vector search p95" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Results per query (avg) & no-result rate",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 36},
+      "datasource": "${DS_PROMETHEUS}",
+      "targets": [
+        { "expr": "sum(rate(retrieval_result_count[5m])) / sum(rate(queries_total[5m]))", "legendFormat": "avg results/query" },
+        { "expr": "sum(rate(no_result_queries_total[5m])) / sum(rate(queries_total[5m]))", "legendFormat": "no-result ratio" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Top score p95",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 44},
+      "datasource": "${DS_PROMETHEUS}",
+      "targets": [
+        { "expr": "histogram_quantile(0.95, sum by (le) (rate(retrieval_top_score_bucket[5m])))", "legendFormat": "top score p95" }
+      ]
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": ["rag", "observability", "otel"],
+  "templating": {"list": []},
+  "time": {"from": "now-1h", "to": "now"},
+  "timezone": "browser",
+  "title": "RAG Document Parser Observability",
+  "version": 1
+}
