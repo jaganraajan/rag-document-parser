@@ -18,7 +18,10 @@ if __name__ == '__main__':
     query = "existential meaning life"
     start = time.perf_counter()
     with tracer.start_as_current_span("cli.search"):
-        results = semantic_query(query)
+        results2 = semantic_query(query)
+        results = sparse_query(query)  # if exists
+        print('results:', results)
+        print('dense results:', results2)
     dur_ms = (time.perf_counter() - start) * 1000
     query_counter.add(1, {"status": "ok"})
     query_latency.record(dur_ms, {"status": "ok"})

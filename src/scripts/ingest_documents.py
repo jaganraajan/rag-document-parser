@@ -1,12 +1,14 @@
 import os, time
 # import json
-from dotenv import load_dotenv  # dev dependency
+from dotenv import load_dotenv
+
 load_dotenv()
 from src.ingestion.pdf_loader import load_pdf_pages
 from src.ingestion.metadata_schema import extract_metadata
 from src.ingestion.normalizer import normalize_metadata
 from src.ingestion.chunk_document import chunk_document
 from src.storage.vector_store import store_vectors
+from src.storage.sparse_store import store_sparse_vectors 
 # from src.logging_utils.audit_logger import log_event
 
 from src.observability.instruments import (
@@ -73,6 +75,7 @@ def ingest_documents(directory):
                 
                 # Store vectors
                 store_vectors(chunks)
+                store_sparse_vectors(chunks)
                 
                 # # Log the ingestion event
                 # log_event(f'Document ingested: {filename}', metadata)

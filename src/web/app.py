@@ -86,9 +86,18 @@ def search():
 
     results = search_with_metadata(q, top_k=k)
     # Add highlighted text
-    for r in results:
+    for r in results["dense_results"]:
         r["highlighted"] = highlight(r["text"], q)
-    return render_template("results.html", query=q, results=results, k=k)
+    for r in results["sparse_results"]:
+        r["highlighted"] = highlight(r["text"], q)
+
+    return render_template(
+        "results.html",
+        query=q,
+        dense_results=results["dense_results"],
+        sparse_results=results["sparse_results"],
+        k=k
+    )
 
 @app.route("/api/search")
 def api_search():
