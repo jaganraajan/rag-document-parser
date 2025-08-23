@@ -4,13 +4,14 @@
     <input type="text" name="q" value="{{ query }}" size="50">
     <input type="number" name="k" value="{{ k }}" min="1" max="20" style="width:5rem">
     <button type="submit">Search</button>
-    {% if results|length > 0 %}
-    <button type="button" id="generate-answer-btn" onclick="generateAnswer()">Generate Answer</button>
+    {% if dense_results|length > 0 or sparse_results|length > 0 %}
+    <button type="button" id="rerank-btn" onclick="rerankResults()">Rerank Results</button>
+    <button type="button" id="generate-answer-btn" onclick="generateAnswer()" style="display: none;">Generate Answer</button>
     {% endif %}
   </form>
   
   <!-- Answer display area -->
-  {% if results|length > 0 %}
+  {% if dense_results|length > 0 or sparse_results|length > 0 %}
   <div id="generated-answer" style="display: none; margin: 1.5rem 0; padding: 1rem; border: 2px solid #007bff; border-radius: 6px; background-color: #f8f9fa;">
     <h3>Generated Answer:</h3>
     <div id="answer-content"></div>
@@ -19,44 +20,148 @@
   <div id="loading-spinner" style="display: none; margin: 1rem 0; text-align: center;">
     <p>Generating answer...</p>
   </div>
-  {% endif %}
-  
-  <h2>Dense Vector Results ({{ dense_results|length }})</h2>
-  {% if dense_results|length == 0 %}
-    <p>No dense matches found.</p>
-  {% endif %}
-  {% for r in dense_results %}
-    <div class="result">
-      <div class="meta">
-        <span class="score">Score: {{ "%.4f"|format(r.score) }}</span> |
-        Page: {{ r.page_number|int if r.page_number is not none else "?" }}, Paragraph: {{ r.paragraph_index|int if r.paragraph_index is not none else "?" }} |
-        Source: {{ r.source_file or "?" }}
-      </div>
-      <div class="snippet">
-        {{ r.highlighted|safe }}
-      </div>
-    </div>
-  {% endfor %}
 
-  <h2>Sparse Vector Results ({{ sparse_results|length }})</h2>
-  {% if sparse_results|length == 0 %}
-    <p>No sparse matches found.</p>
+  <div id="rerank-spinner" style="display: none; margin: 1rem 0; text-align: center;">
+    <p>Reranking results...</p>
+  </div>
   {% endif %}
-  {% for r in sparse_results %}
-    <div class="result">
-      <div class="meta">
-        <span class="score">Score: {{ "%.4f"|format(r.score) }}</span> |
-        Page: {{ r.page_number|int if r.page_number is not none else "?" }}, Paragraph: {{ r.paragraph_index|int if r.paragraph_index is not none else "?" }} |
-        Source: {{ r.source_file or "?" }}
-      </div>
-      <div class="snippet">
-        {{ r.highlighted|safe }}
-      </div>
-    </div>
-  {% endfor %}
   
-  {% if results|length > 0 %}
+  <!-- Results container for dynamic updates -->
+  <div id="results-container">
+    <h2>Dense Vector Results (<span id="dense-count">{{ dense_results|length }}</span>)</h2>
+    <div id="dense-results">
+      {% if dense_results|length == 0 %}
+        <p>No dense matches found.</p>
+      {% endif %}
+      {% for r in dense_results %}
+        <div class="result">
+          <div class="meta">
+            <span class="score">Score: {{ "%.4f"|format(r.score) }}</span> |
+            Page: {{ r.page_number|int if r.page_number is not none else "?" }}, Paragraph: {{ r.paragraph_index|int if r.paragraph_index is not none else "?" }} |
+            Source: {{ r.source_file or "?" }}
+          </div>
+          <div class="snippet">
+            {{ r.highlighted|safe }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <h2>Sparse Vector Results (<span id="sparse-count">{{ sparse_results|length }}</span>)</h2>
+    <div id="sparse-results">
+      {% if sparse_results|length == 0 %}
+        <p>No sparse matches found.</p>
+      {% endif %}
+      {% for r in sparse_results %}
+        <div class="result">
+          <div class="meta">
+            <span class="score">Score: {{ "%.4f"|format(r.score) }}</span> |
+            Page: {{ r.page_number|int if r.page_number is not none else "?" }}, Paragraph: {{ r.paragraph_index|int if r.paragraph_index is not none else "?" }} |
+            Source: {{ r.source_file or "?" }}
+          </div>
+          <div class="snippet">
+            {{ r.highlighted|safe }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  
+  {% if dense_results|length > 0 or sparse_results|length > 0 %}
   <script>
+    async function rerankResults() {
+      const rerankBtn = document.getElementById('rerank-btn');
+      const generateBtn = document.getElementById('generate-answer-btn');
+      const rerankSpinner = document.getElementById('rerank-spinner');
+      
+      // Show loading spinner, disable rerank button
+      rerankBtn.disabled = true;
+      rerankBtn.textContent = 'Reranking...';
+      rerankSpinner.style.display = 'block';
+      
+      try {
+        const response = await fetch('/rerank', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query: '{{ query }}'
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.dense_results && data.sparse_results) {
+          // Update results containers with reranked data
+          updateResultsDisplay(data.dense_results, data.sparse_results);
+          
+          // Show generate answer button after successful reranking
+          generateBtn.style.display = 'inline-block';
+          
+          // Hide rerank button as reranking is complete
+          rerankBtn.style.display = 'none';
+        } else {
+          console.error('Reranking failed:', data.error || 'Unknown error');
+          alert('Reranking failed: ' + (data.error || 'Unknown error'));
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error: Failed to connect to server');
+      } finally {
+        // Re-enable button and hide loading spinner
+        rerankBtn.disabled = false;
+        rerankBtn.textContent = 'Rerank Results';
+        rerankSpinner.style.display = 'none';
+      }
+    }
+
+    function updateResultsDisplay(denseResults, sparseResults) {
+      // Update dense results
+      const denseContainer = document.getElementById('dense-results');
+      const denseCount = document.getElementById('dense-count');
+      denseCount.textContent = denseResults.length;
+      
+      if (denseResults.length === 0) {
+        denseContainer.innerHTML = '<p>No dense matches found.</p>';
+      } else {
+        denseContainer.innerHTML = denseResults.map(r => 
+          `<div class="result">
+            <div class="meta">
+              <span class="score">Score: ${r.score.toFixed(4)}</span> |
+              Page: ${r.page_number || '?'}, Paragraph: ${r.paragraph_index || '?'} |
+              Source: ${r.source_file || '?'}
+            </div>
+            <div class="snippet">
+              ${r.highlighted}
+            </div>
+          </div>`
+        ).join('');
+      }
+      
+      // Update sparse results
+      const sparseContainer = document.getElementById('sparse-results');
+      const sparseCount = document.getElementById('sparse-count');
+      sparseCount.textContent = sparseResults.length;
+      
+      if (sparseResults.length === 0) {
+        sparseContainer.innerHTML = '<p>No sparse matches found.</p>';
+      } else {
+        sparseContainer.innerHTML = sparseResults.map(r => 
+          `<div class="result">
+            <div class="meta">
+              <span class="score">Score: ${r.score.toFixed(4)}</span> |
+              Page: ${r.page_number || '?'}, Paragraph: ${r.paragraph_index || '?'} |
+              Source: ${r.source_file || '?'}
+            </div>
+            <div class="snippet">
+              ${r.highlighted}
+            </div>
+          </div>`
+        ).join('');
+      }
+    }
+
     async function generateAnswer() {
       const button = document.getElementById('generate-answer-btn');
       const loadingSpinner = document.getElementById('loading-spinner');
