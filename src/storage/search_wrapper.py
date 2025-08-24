@@ -23,7 +23,9 @@ def search_with_metadata(query: str, top_k: int = 5) -> List[Dict[str, Any]]:
         }
       }
     """
-    dense_results_raw = semantic_query(query, top_k=top_k)
+    # Retrieve N*4 dense candidates
+    initial_k = top_k * 4
+    dense_results_raw = semantic_query(query, top_k=initial_k)
     sparse_results_raw = sparse_query(query, top_k=top_k)
     # print('in search_with_metadata, raw:', raw)
     # print('result is', raw.get("result", {}))

@@ -22,7 +22,6 @@ class CrossEncoderReranker:
         """
 
         pairs = [(query, r[text_key]) for r in results]
-        print('Reranking pairs:', pairs[:2])  # Debug: show first 10 pairs
         # Tokenize all pairs
         encodings = self.tokenizer.batch_encode_plus(
             pairs,
