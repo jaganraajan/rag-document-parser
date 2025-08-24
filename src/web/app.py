@@ -34,20 +34,12 @@ def truncate_text(text: str, max_chars: int = 500) -> str:
         return text
     return text[:max_chars] + "..."
 
-def build_context_from_results(results, max_total_chars: int = 8000) -> str:
+def build_context_from_results(dense_results, sparse_results, max_total_chars: int = 8000) -> str:
     """Build context string from search results with truncation."""
     context_parts = []
     total_chars = 0
     
-    # Handle both old and new result formats
-    if isinstance(results, dict) and 'dense_results' in results:
-        # New format: iterate through both dense and sparse results
-        all_results = results.get('dense_results', []) + results.get('sparse_results', [])
-    else:
-        # Old format: assume it's a list
-        all_results = results if isinstance(results, list) else []
-    
-    for i, result in enumerate(all_results):
+    for i, result in enumerate(dense_results + sparse_results):
         chunk_text = result.get("text", "")
         truncated_chunk = truncate_text(chunk_text, 500)
         
@@ -155,7 +147,8 @@ def rerank():
 
         reranked_dense_results = reranker.rerank(query, dense_results, text_key="text", top_n=5)
 
-        print(reranked_dense_results)
+        context = build_context_from_results(reranked_dense_results, sparse_results)
+        print('context is', context)
         # Optionally, remove 'raw' key for template safety
         # for r in reranked_results.get("dense_results", []):
         #     r.pop("raw", None)
@@ -168,7 +161,8 @@ def rerank():
             dense_results=reranked_dense_results,
             sparse_results=sparse_results,
             k=k,
-            reranked=True
+            reranked=True,
+            context=context
         )
     except Exception as e:
         print(f"Error reranking results: {str(e)}")
@@ -176,6 +170,7 @@ def rerank():
 
 @app.route("/generate_answer", methods=["POST"])
 def generate_answer():
+    print('in generate_answer')
     """Generate an answer using Gemini AI from retrieved context."""
     try:
         # Check if Gemini API key is configured
@@ -188,18 +183,10 @@ def generate_answer():
             return jsonify({"error": "Missing query in request body"}), 400
         
         query = data["query"].strip()
+        context = data["context"].strip()
+
         if not query:
             return jsonify({"error": "Query cannot be empty"}), 400
-        
-        # Retrieve context using semantic search
-        top_k = 5  # configurable
-        results = search_with_metadata(query, top_k=top_k)
-        
-        if not results:
-            return jsonify({"error": "No relevant context found"}), 400
-        
-        # Build context from retrieved chunks
-        context = build_context_from_results(results)
         
         # Construct prompt for Gemini
         prompt = f"""You are a helpful assistant. Use ONLY the provided context to answer the user query. If the answer is not in the context, say you do not have enough information.

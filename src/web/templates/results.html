@@ -7,7 +7,7 @@
     {% if dense_results|length > 0 or sparse_results|length > 0 %}
     <!-- Add this where your buttons are rendered -->
       {% if reranked %}
-        <button id="generate-answer-btn" onclick="generateAnswer()">Generate Answer</button>
+        <button id="generate-answer-btn" type="button" onclick="generateAnswer()">Generate Answer</button>
       {% else %}
         <button id="rerank-btn" onclick="rerankResults()">Rerank Results</button>
       {% endif %}
@@ -109,7 +109,8 @@
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            query: '{{ query }}'
+            query: '{{ query }}',
+            context: `{{ context | replace('\n', '\\n') | replace('\r', '\\r') | replace("'", "\\'") }}`
           })
         });
         
