@@ -24,3 +24,4 @@ sample_evaluation.csv
 .DS_Store
 
 feedback_log.jsonl
+mlruns/
