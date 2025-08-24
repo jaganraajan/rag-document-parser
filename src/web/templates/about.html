@@ -1,5 +1,81 @@
-{% extends "base.html" %}{% block title %}About{% endblock %}{% block content %}
-<h1>About</h1>
-<p>This application is a personal project to explore and research favorite philosophy PDFs using a Retrieval-Augmented Generation (RAG) pipeline.</p>
-<p>It ingests papers, extracts structured metadata, chunks content, and enables semantic search over the corpus.</p>
+{% extends "base.html" %}
+
+{% block title %}About - RAG Search UI{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+  <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2rem; text-align: center;">
+    About RAG Semantic Search
+  </h1>
+  
+  <div style="background-color: var(--surface-color); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--shadow-md); margin-bottom: 2rem;">
+    <h2 style="color: var(--primary-color); margin-bottom: 1rem; font-size: 1.5rem;">Project Overview</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1.1rem; line-height: 1.7;">
+      This application is a personal project to explore and research favorite philosophy PDFs using a 
+      Retrieval-Augmented Generation (RAG) pipeline. It provides an intelligent way to search through 
+      document collections using advanced AI techniques.
+    </p>
+    
+    <h2 style="color: var(--primary-color); margin-bottom: 1rem; font-size: 1.5rem;">How It Works</h2>
+    <div style="display: grid; gap: 1.5rem;">
+      <div style="display: flex; gap: 1rem; align-items: start;">
+        <div style="background-color: var(--primary-color); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; margin-top: 0.25rem;">1</div>
+        <div>
+          <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">Document Ingestion</h3>
+          <p style="color: var(--text-secondary);">The system ingests PDF documents and extracts structured metadata for processing.</p>
+        </div>
+      </div>
+      
+      <div style="display: flex; gap: 1rem; align-items: start;">
+        <div style="background-color: var(--primary-color); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; margin-top: 0.25rem;">2</div>
+        <div>
+          <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">Content Chunking</h3>
+          <p style="color: var(--text-secondary);">Documents are intelligently split into semantic chunks for optimal retrieval performance.</p>
+        </div>
+      </div>
+      
+      <div style="display: flex; gap: 1rem; align-items: start;">
+        <div style="background-color: var(--primary-color); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; margin-top: 0.25rem;">3</div>
+        <div>
+          <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">Semantic Search</h3>
+          <p style="color: var(--text-secondary);">Advanced vector embeddings enable semantic search over the entire document corpus.</p>
+        </div>
+      </div>
+      
+      <div style="display: flex; gap: 1rem; align-items: start;">
+        <div style="background-color: var(--primary-color); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; margin-top: 0.25rem;">4</div>
+        <div>
+          <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">AI-Powered Answers</h3>
+          <p style="color: var(--text-secondary);">Generate comprehensive answers using retrieved context and large language models.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div style="background-color: var(--surface-color); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--shadow-md);">
+    <h2 style="color: var(--primary-color); margin-bottom: 1rem; font-size: 1.5rem;">Technology Stack</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+      <div style="text-align: center; padding: 1rem; border: 1px solid var(--border-color); border-radius: var(--border-radius);">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🐍</div>
+        <h3 style="color: var(--text-primary); margin-bottom: 0.25rem;">Python & Flask</h3>
+        <p style="color: var(--text-secondary); font-size: 0.875rem;">Web framework and backend</p>
+      </div>
+      <div style="text-align: center; padding: 1rem; border: 1px solid var(--border-color); border-radius: var(--border-radius);">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌲</div>
+        <h3 style="color: var(--text-primary); margin-bottom: 0.25rem;">Pinecone</h3>
+        <p style="color: var(--text-secondary); font-size: 0.875rem;">Vector database for embeddings</p>
+      </div>
+      <div style="text-align: center; padding: 1rem; border: 1px solid var(--border-color); border-radius: var(--border-radius);">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🤖</div>
+        <h3 style="color: var(--text-primary); margin-bottom: 0.25rem;">Google Gemini</h3>
+        <p style="color: var(--text-secondary); font-size: 0.875rem;">AI model for answer generation</p>
+      </div>
+      <div style="text-align: center; padding: 1rem; border: 1px solid var(--border-color); border-radius: var(--border-radius);">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+        <h3 style="color: var(--text-primary); margin-bottom: 0.25rem;">OpenTelemetry</h3>
+        <p style="color: var(--text-secondary); font-size: 0.875rem;">Observability and tracing</p>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
