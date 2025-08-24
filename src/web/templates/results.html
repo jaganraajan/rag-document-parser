@@ -22,6 +22,9 @@
             </svg>
             Generate Answer
           </button>
+          <div style="font-size: 0.9em; color: var(--secondary-color); margin-top: 0.25rem;">
+            Uses <code>gemini-2.5-flash</code> model for generating answer
+          </div>
         {% else %}
           <button id="rerank-btn" type="button" onclick="rerankResults()">
             <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -29,6 +32,9 @@
             </svg>
             Rerank Results
           </button>
+          <div style="font-size: 0.9em; color: var(--secondary-color); margin-top: 0.25rem;">
+            Uses <code>cross-encoder/ms-marco-MiniLM-L-12-v2</code> for reranking
+          </div>
         {% endif %}
       {% endif %}
     </div>
@@ -67,6 +73,9 @@
         <span style="background-color: var(--primary-color); color: white; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.75rem; font-weight: normal;">
           <span id="dense-count">{{ dense_results|length }}</span>
         </span>
+        <span style="margin-left: 1rem; color: var(--secondary-color); font-size: 0.9rem;">
+          (Model: <code>llama-text-embed-v2</code>)
+        </span>
       </h2>
       
       <div id="dense-results">
@@ -104,6 +113,9 @@
         Sparse Vector Results 
         <span style="background-color: var(--primary-color); color: white; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.75rem; font-weight: normal;">
           <span id="sparse-count">{{ sparse_results|length }}</span>
+        </span>
+        <span style="margin-left: 1rem; color: var(--secondary-color); font-size: 0.9rem;">
+          (Model: <code>pinecone-sparse-english-v0</code>)
         </span>
       </h2>
       
