@@ -58,65 +58,69 @@ def build_context_from_results(results, max_total_chars: int = 8000) -> str:
     return "\n".join(context_parts)
 
 def rerank_results(query: str, dense_results: list, sparse_results: list) -> dict:
-    """
-    Placeholder reranking function. 
-    In a real implementation, this would use a cross-encoder model.
-    For now, we'll implement a simple strategy:
-    1. Combine all results
-    2. Re-sort by score in descending order
-    3. Apply some filtering (e.g., minimum score threshold)
-    4. Return top results split back into dense/sparse
-    """
-    import random
+    # """
+    # Placeholder reranking function. 
+    # In a real implementation, this would use a cross-encoder model.
+    # For now, we'll implement a simple strategy:
+    # 1. Combine all results
+    # 2. Re-sort by score in descending order
+    # 3. Apply some filtering (e.g., minimum score threshold)
+    # 4. Return top results split back into dense/sparse
+    # """
+    # import random
     
-    # Add a source type to track which results came from where
-    for result in dense_results:
-        result['source_type'] = 'dense'
-    for result in sparse_results:
-        result['source_type'] = 'sparse'
+    # # Add a source type to track which results came from where
+    # for result in dense_results:
+    #     result['source_type'] = 'dense'
+    # for result in sparse_results:
+    #     result['source_type'] = 'sparse'
     
-    # Combine all results
-    all_results = dense_results + sparse_results
+    # # Combine all results
+    # all_results = dense_results + sparse_results
     
-    # Simple reranking: sort by score descending
-    all_results.sort(key=lambda x: x.get('score', 0), reverse=True)
+    # # Simple reranking: sort by score descending
+    # all_results.sort(key=lambda x: x.get('score', 0), reverse=True)
     
-    # Apply a minimum score threshold (placeholder)
-    min_score = 0.1
-    filtered_results = [r for r in all_results if r.get('score', 0) >= min_score]
+    # # Apply a minimum score threshold (placeholder)
+    # min_score = 0.1
+    # filtered_results = [r for r in all_results if r.get('score', 0) >= min_score]
     
-    # Limit to top results (e.g., top 10)
-    top_results = filtered_results[:10]
+    # # Limit to top results (e.g., top 10)
+    # top_results = filtered_results[:10]
     
-    # Add a small random boost to simulate cross-encoder reranking
-    # In practice, this would be replaced with actual cross-encoder scores
-    for result in top_results:
-        # Simulate cross-encoder giving a boost/penalty between -0.1 and +0.1
-        cross_encoder_boost = (random.random() - 0.5) * 0.2
-        result['reranked_score'] = result.get('score', 0) + cross_encoder_boost
+    # # Add a small random boost to simulate cross-encoder reranking
+    # # In practice, this would be replaced with actual cross-encoder scores
+    # for result in top_results:
+    #     # Simulate cross-encoder giving a boost/penalty between -0.1 and +0.1
+    #     cross_encoder_boost = (random.random() - 0.5) * 0.2
+    #     result['reranked_score'] = result.get('score', 0) + cross_encoder_boost
     
-    # Re-sort by the new reranked score
-    top_results.sort(key=lambda x: x.get('reranked_score', 0), reverse=True)
+    # # Re-sort by the new reranked score
+    # top_results.sort(key=lambda x: x.get('reranked_score', 0), reverse=True)
     
-    # Update the score field to reflect reranked scores
-    for result in top_results:
-        result['score'] = result.get('reranked_score', result.get('score', 0))
-        # Clean up temporary fields
-        if 'reranked_score' in result:
-            del result['reranked_score']
+    # # Update the score field to reflect reranked scores
+    # for result in top_results:
+    #     result['score'] = result.get('reranked_score', result.get('score', 0))
+    #     # Clean up temporary fields
+    #     if 'reranked_score' in result:
+    #         del result['reranked_score']
     
-    # Split results back into dense and sparse (maintaining order)
-    reranked_dense = [r for r in top_results if r.get('source_type') == 'dense']
-    reranked_sparse = [r for r in top_results if r.get('source_type') == 'sparse']
+    # # Split results back into dense and sparse (maintaining order)
+    # reranked_dense = [r for r in top_results if r.get('source_type') == 'dense']
+    # reranked_sparse = [r for r in top_results if r.get('source_type') == 'sparse']
     
-    # Clean up source_type field
-    for result in reranked_dense + reranked_sparse:
-        if 'source_type' in result:
-            del result['source_type']
+    # # Clean up source_type field
+    # for result in reranked_dense + reranked_sparse:
+    #     if 'source_type' in result:
+    #         del result['source_type']
     
+    # return {
+    #     'dense_results': reranked_dense,
+    #     'sparse_results': reranked_sparse
+    # }
     return {
-        'dense_results': reranked_dense,
-        'sparse_results': reranked_sparse
+        'dense_results': dense_results[-2:],
+        'sparse_results': sparse_results[-2:]
     }
 
 def highlight(text: str, query: str):
@@ -184,47 +188,51 @@ def api_search():
     #     "results": results
     # })
 
-@app.route("/rerank", methods=["POST"])
+@app.route("/rerank", methods=["GET"])
 def rerank():
-    """Rerank search results using a placeholder cross-encoder strategy."""
+    """Rerank search results and render a results page."""
     try:
-        # Get query from request JSON
-        data = request.get_json()
-        if not data or "query" not in data:
-            return jsonify({"error": "Missing query in request body"}), 400
-        
-        query = data["query"].strip()
+        query = request.args.get("q", "").strip()
         if not query:
-            return jsonify({"error": "Query cannot be empty"}), 400
-        
+            return render_template("index.html", error="Enter a query.")
+
+        try:
+            k = int(request.args.get("k", 5))
+        except ValueError:
+            k = 5
+
         # Get the original search results
-        # We need to re-run the search to get the original results
-        # In a more sophisticated implementation, we might cache the original results
-        k = data.get("k", 5)  # Default to 5 if not provided
-        
         original_results = search_with_metadata(query, top_k=k)
-        
         if not original_results:
-            return jsonify({"error": "No search results found"}), 400
-        
-        # Extract results
+            return render_template("results.html", query=query, dense_results=[], sparse_results=[], reranked_results=[], k=k, error="No search results found.")
+
         dense_results = original_results.get("dense_results", [])
         sparse_results = original_results.get("sparse_results", [])
-        
-        # Apply highlighting to the original results before reranking
+
         for r in dense_results:
             r["highlighted"] = highlight(r["text"], query)
         for r in sparse_results:
             r["highlighted"] = highlight(r["text"], query)
-        
-        # Perform reranking
+
         reranked_results = rerank_results(query, dense_results, sparse_results)
-        
-        return jsonify(reranked_results)
-        
+
+        # Optionally, remove 'raw' key for template safety
+        for r in reranked_results.get("dense_results", []):
+            r.pop("raw", None)
+        for r in reranked_results.get("sparse_results", []):
+            r.pop("raw", None)
+
+        return render_template(
+            "results.html",
+            query=query,
+            dense_results=reranked_results.get("dense_results", []),
+            sparse_results=reranked_results.get("sparse_results", []),
+            k=k,
+            reranked=True
+        )
     except Exception as e:
         print(f"Error reranking results: {str(e)}")
-        return jsonify({"error": "An error occurred while reranking results"}), 500
+        return render_template("results.html", query="", dense_results=[], sparse_results=[], reranked_results=[], k=5, error="An error occurred while reranking results.")
 
 @app.route("/generate_answer", methods=["POST"])
 def generate_answer():
@@ -256,12 +264,12 @@ def generate_answer():
         # Construct prompt for Gemini
         prompt = f"""You are a helpful assistant. Use ONLY the provided context to answer the user query. If the answer is not in the context, say you do not have enough information.
 
-Query: {query}
+            Query: {query}
 
-Context:
-{context}
+            Context:
+            {context}
 
-Answer:"""
+            Answer:"""
         
         # Call Gemini API
         model = genai.GenerativeModel(GEMINI_MODEL_NAME)

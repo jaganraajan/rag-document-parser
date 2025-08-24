@@ -5,8 +5,12 @@
     <input type="number" name="k" value="{{ k }}" min="1" max="20" style="width:5rem">
     <button type="submit">Search</button>
     {% if dense_results|length > 0 or sparse_results|length > 0 %}
-    <button type="button" id="rerank-btn" onclick="rerankResults()">Rerank Results</button>
-    <button type="button" id="generate-answer-btn" onclick="generateAnswer()" style="display: none;">Generate Answer</button>
+    <!-- Add this where your buttons are rendered -->
+      {% if reranked %}
+        <button id="generate-answer-btn" onclick="generateAnswer()">Generate Answer</button>
+      {% else %}
+        <button id="rerank-btn" onclick="rerankResults()">Rerank Results</button>
+      {% endif %}
     {% endif %}
   </form>
   
@@ -71,95 +75,15 @@
   <script>
     async function rerankResults() {
       const rerankBtn = document.getElementById('rerank-btn');
-      const generateBtn = document.getElementById('generate-answer-btn');
       const rerankSpinner = document.getElementById('rerank-spinner');
-      
-      // Show loading spinner, disable rerank button
       rerankBtn.disabled = true;
       rerankBtn.textContent = 'Reranking...';
       rerankSpinner.style.display = 'block';
-      
-      try {
-        const response = await fetch('/rerank', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            query: '{{ query }}'
-          })
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok && data.dense_results && data.sparse_results) {
-          // Update results containers with reranked data
-          updateResultsDisplay(data.dense_results, data.sparse_results);
-          
-          // Show generate answer button after successful reranking
-          generateBtn.style.display = 'inline-block';
-          
-          // Hide rerank button as reranking is complete
-          rerankBtn.style.display = 'none';
-        } else {
-          console.error('Reranking failed:', data.error || 'Unknown error');
-          alert('Reranking failed: ' + (data.error || 'Unknown error'));
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Error: Failed to connect to server');
-      } finally {
-        // Re-enable button and hide loading spinner
-        rerankBtn.disabled = false;
-        rerankBtn.textContent = 'Rerank Results';
-        rerankSpinner.style.display = 'none';
-      }
-    }
 
-    function updateResultsDisplay(denseResults, sparseResults) {
-      // Update dense results
-      const denseContainer = document.getElementById('dense-results');
-      const denseCount = document.getElementById('dense-count');
-      denseCount.textContent = denseResults.length;
-      
-      if (denseResults.length === 0) {
-        denseContainer.innerHTML = '<p>No dense matches found.</p>';
-      } else {
-        denseContainer.innerHTML = denseResults.map(r => 
-          `<div class="result">
-            <div class="meta">
-              <span class="score">Score: ${r.score.toFixed(4)}</span> |
-              Page: ${r.page_number || '?'}, Paragraph: ${r.paragraph_index || '?'} |
-              Source: ${r.source_file || '?'}
-            </div>
-            <div class="snippet">
-              ${r.highlighted}
-            </div>
-          </div>`
-        ).join('');
-      }
-      
-      // Update sparse results
-      const sparseContainer = document.getElementById('sparse-results');
-      const sparseCount = document.getElementById('sparse-count');
-      sparseCount.textContent = sparseResults.length;
-      
-      if (sparseResults.length === 0) {
-        sparseContainer.innerHTML = '<p>No sparse matches found.</p>';
-      } else {
-        sparseContainer.innerHTML = sparseResults.map(r => 
-          `<div class="result">
-            <div class="meta">
-              <span class="score">Score: ${r.score.toFixed(4)}</span> |
-              Page: ${r.page_number || '?'}, Paragraph: ${r.paragraph_index || '?'} |
-              Source: ${r.source_file || '?'}
-            </div>
-            <div class="snippet">
-              ${r.highlighted}
-            </div>
-          </div>`
-        ).join('');
-      }
+      // Build the rerank URL with query and k
+      const query = encodeURIComponent('{{ query }}');
+      const k = encodeURIComponent('{{ k }}');
+      window.location.href = `/rerank?q=${query}&k=${k}`;
     }
 
     async function generateAnswer() {
