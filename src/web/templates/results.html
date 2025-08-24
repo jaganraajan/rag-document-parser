@@ -99,8 +99,12 @@
               <span>Paragraph: {{ r.paragraph_index|int if r.paragraph_index is not none else "?" }}</span>
               <span>Source: {{ r.source_file or "?" }}</span>
             </div>
-            <div class="snippet" style="color: var(--text-primary); line-height: 1.6;">
-              {{ r.highlighted|safe }}
+            <div class="search-result" data-chunk-id="{{ r.id }}" style="color: var(--text-primary); line-height: 1.6;">
+                <div class="chunk-text">{{ r.highlighted|safe }}</div>
+                <div style="display: flex; justify-content: flex-end;">
+                <button class="feedback-btn" data-feedback="1">👍 Relevant</button>
+                <button class="feedback-btn" data-feedback="0">👎 Not Relevant</button>
+                </div>
             </div>
           </div>
         {% endfor %}
@@ -155,6 +159,32 @@
   
   {% if dense_results|length > 0 or sparse_results|length > 0 %}
   <script>
+    document.querySelectorAll('.feedback-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const chunkDiv = this.closest('.search-result');
+        const chunkId = chunkDiv.getAttribute('data-chunk-id');
+        const feedback = this.getAttribute('data-feedback');
+        const query = "{{ query|e }}";  // Assuming 'query' is in the context
+
+        console.log(`Feedback for chunk ${chunkId}: ${feedback} for query "${query}"`);
+        fetch('/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: query,
+            chunk_id: chunkId,
+            feedback: Number(feedback),
+            chunk_text: chunkDiv.querySelector('.chunk-text').innerText
+          })
+        }).then(res => {
+          if(res.ok) {
+            this.disabled = true;
+            this.innerText = 'Thanks!';
+          }
+        });
+        });
+      });
+
     async function rerankResults() {
       const rerankBtn = document.getElementById('rerank-btn');
       const rerankSpinner = document.getElementById('rerank-spinner');

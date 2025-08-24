@@ -1,4 +1,6 @@
 import os
+import json
+from datetime import datetime
 from flask import Flask, request, render_template, jsonify
 from ..storage.search_wrapper import search_with_metadata
 from dotenv import load_dotenv
@@ -17,11 +19,14 @@ except ImportError:
     select_config = None
 
 app = Flask(__name__)
+
 if select_config:
     app.config.from_object(select_config())
 
 # Configure Gemini AI
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+FEEDBACK_FILE = "feedback_log.jsonl"
+
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
     GEMINI_MODEL_NAME = "gemini-2.5-flash"
@@ -104,19 +109,14 @@ def search():
         k=k
     )
 
-@app.route("/api/search")
-def api_search():
-    q = request.args.get("q", "").strip()
-    if not q:
-        return jsonify({"error": "Missing q"}), 400
-    k = int(request.args.get("k", 5))
-    print(f"API search for query: {q} with top_k={k}")
-    # results = search_with_metadata(q, top_k=k)
-    # return jsonify({
-    #     "query": q,
-    #     "top_k": k,
-    #     "results": results
-    # })
+@app.route('/feedback', methods=['POST'])
+def receive_feedback():
+    data = request.get_json()
+    data['timestamp'] = datetime.utcnow().isoformat()
+    # Store each feedback as one line in JSONL file
+    with open(FEEDBACK_FILE, "a") as f:
+        f.write(json.dumps(data) + "\n")
+    return jsonify({"status": "ok"})
 
 @app.route("/rerank", methods=["GET"])
 def rerank():
