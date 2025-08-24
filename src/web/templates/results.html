@@ -1,79 +1,145 @@
 {% extends "base.html" %}
+
+{% block title %}Search Results - RAG Search UI{% endblock %}
+
 {% block content %}
   <form class="search" action="/search" method="get">
-    <input type="text" name="q" value="{{ query }}" size="50">
-    <input type="number" name="k" value="{{ k }}" min="1" max="20" style="width:5rem">
-    <button type="submit">Search</button>
-    {% if dense_results|length > 0 or sparse_results|length > 0 %}
-    <!-- Add this where your buttons are rendered -->
-      {% if reranked %}
-        <button id="generate-answer-btn" type="button" onclick="generateAnswer()">Generate Answer</button>
-      {% else %}
-        <button id="rerank-btn" onclick="rerankResults()">Rerank Results</button>
+    <div class="form-group">
+      <input type="text" name="q" value="{{ query }}" placeholder="Enter your search query..." required>
+      <input type="number" name="k" value="{{ k }}" min="1" max="20" title="Number of results">
+      <button type="submit">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+        </svg>
+        Search
+      </button>
+      {% if dense_results|length > 0 or sparse_results|length > 0 %}
+        {% if reranked %}
+          <button id="generate-answer-btn" type="button" onclick="generateAnswer()">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+              <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+            </svg>
+            Generate Answer
+          </button>
+        {% else %}
+          <button id="rerank-btn" type="button" onclick="rerankResults()">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+            </svg>
+            Rerank Results
+          </button>
+        {% endif %}
       {% endif %}
-    {% endif %}
+    </div>
   </form>
   
-  <!-- Answer display area -->
   {% if dense_results|length > 0 or sparse_results|length > 0 %}
-  <div id="generated-answer" style="display: none; margin: 1.5rem 0; padding: 1rem; border: 2px solid #007bff; border-radius: 6px; background-color: #f8f9fa;">
-    <h3>Generated Answer:</h3>
-    <div id="answer-content"></div>
-  </div>
-  
-  <div id="loading-spinner" style="display: none; margin: 1rem 0; text-align: center;">
-    <p>Generating answer...</p>
-  </div>
+    <!-- Answer display area -->
+    <div id="generated-answer" style="display: none; background-color: var(--surface-color); border: 2px solid var(--secondary-color); border-radius: var(--border-radius); padding: 1.5rem; margin-bottom: 2rem; box-shadow: var(--shadow-md);">
+      <h3 style="color: var(--secondary-color); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+          <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+        </svg>
+        Generated Answer
+      </h3>
+      <div id="answer-content" style="color: var(--text-primary); line-height: 1.7;"></div>
+    </div>
 
-  <div id="rerank-spinner" style="display: none; margin: 1rem 0; text-align: center;">
-    <p>Reranking results...</p>
-  </div>
-  {% endif %}
-  
-  <!-- Results container for dynamic updates -->
-  <div id="results-container">
-    <h2>Dense Vector Results (<span id="dense-count">{{ dense_results|length }}</span>)</h2>
-    <div id="dense-results">
-      {% if dense_results|length == 0 %}
-        <p>No dense matches found.</p>
-      {% endif %}
-      {% for r in dense_results %}
-        <div class="result">
-          <div class="meta">
-            {% if reranked %}
-              <span class="score">Rerank Score: {{ "%.4f"|format(r.rerank_score) }}</span>
-            {% else %}
+    <div id="loading-spinner" style="display: none; text-align: center; padding: 2rem;">
+      <div class="spinner" style="margin: 0 auto 1rem;"></div>
+      <p style="color: var(--text-secondary);">Generating AI-powered answer...</p>
+    </div>
+
+    <div id="rerank-spinner" style="display: none; text-align: center; padding: 2rem;">
+      <div class="spinner" style="margin: 0 auto 1rem;"></div>
+      <p style="color: var(--text-secondary);">Reranking results for better relevance...</p>
+    </div>
+
+    <!-- Results container -->
+    <div id="results-container">
+      <h2 style="color: var(--text-primary); margin-bottom: 1rem; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM7 3a1 1 0 0 1 2 0v3.793L11.854 4.54a1 1 0 1 1 1.414 1.414L10.414 8.5l2.854 2.646a1 1 0 0 1-1.414 1.414L9 10.207V14a1 1 0 1 1-2 0v-3.793L4.146 12.46a1 1 0 0 1-1.414-1.414L5.586 8.5 2.732 5.854a1 1 0 0 1 1.414-1.414L7 6.793V3z"/>
+        </svg>
+        Dense Vector Results 
+        <span style="background-color: var(--primary-color); color: white; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.75rem; font-weight: normal;">
+          <span id="dense-count">{{ dense_results|length }}</span>
+        </span>
+      </h2>
+      
+      <div id="dense-results">
+        {% if dense_results|length == 0 %}
+          <div style="background-color: var(--surface-color); padding: 2rem; border-radius: var(--border-radius); text-align: center; color: var(--text-secondary);">
+            <svg width="48" height="48" fill="currentColor" viewBox="0 0 16 16" style="margin-bottom: 1rem; opacity: 0.5;">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg>
+            <p>No dense vector matches found for your query.</p>
+          </div>
+        {% endif %}
+        {% for r in dense_results %}
+          <div class="result">
+            <div class="meta">
+              {% if reranked %}
+                <span class="score">Rerank Score: {{ "%.4f"|format(r.rerank_score) }}</span>
+              {% else %}
+                <span class="score">Score: {{ "%.4f"|format(r.score) }}</span>
+              {% endif %}
+              <span>Page: {{ r.page_number|int if r.page_number is not none else "?" }}</span>
+              <span>Paragraph: {{ r.paragraph_index|int if r.paragraph_index is not none else "?" }}</span>
+              <span>Source: {{ r.source_file or "?" }}</span>
+            </div>
+            <div class="snippet" style="color: var(--text-primary); line-height: 1.6;">
+              {{ r.highlighted|safe }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <h2 style="color: var(--text-primary); margin: 2rem 0 1rem; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+        </svg>
+        Sparse Vector Results 
+        <span style="background-color: var(--primary-color); color: white; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.75rem; font-weight: normal;">
+          <span id="sparse-count">{{ sparse_results|length }}</span>
+        </span>
+      </h2>
+      
+      <div id="sparse-results">
+        {% if sparse_results|length == 0 %}
+          <div style="background-color: var(--surface-color); padding: 2rem; border-radius: var(--border-radius); text-align: center; color: var(--text-secondary);">
+            <svg width="48" height="48" fill="currentColor" viewBox="0 0 16 16" style="margin-bottom: 1rem; opacity: 0.5;">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg>
+            <p>No sparse vector matches found for your query.</p>
+          </div>
+        {% endif %}
+        {% for r in sparse_results %}
+          <div class="result">
+            <div class="meta">
               <span class="score">Score: {{ "%.4f"|format(r.score) }}</span>
-            {% endif %}
-            | Page: {{ r.page_number|int if r.page_number is not none else "?" }}, Paragraph: {{ r.paragraph_index|int if r.paragraph_index is not none else "?" }} 
-            | Source: {{ r.source_file or "?" }}
+              <span>Page: {{ r.page_number|int if r.page_number is not none else "?" }}</span>
+              <span>Paragraph: {{ r.paragraph_index|int if r.paragraph_index is not none else "?" }}</span>
+              <span>Source: {{ r.source_file or "?" }}</span>
+            </div>
+            <div class="snippet" style="color: var(--text-primary); line-height: 1.6;">
+              {{ r.highlighted|safe }}
+            </div>
           </div>
-          <div class="snippet">
-            {{ r.highlighted|safe }}
-          </div>
-        </div>
-      {% endfor %}
+        {% endfor %}
+      </div>
     </div>
-
-    <h2>Sparse Vector Results (<span id="sparse-count">{{ sparse_results|length }}</span>)</h2>
-    <div id="sparse-results">
-      {% if sparse_results|length == 0 %}
-        <p>No sparse matches found.</p>
-      {% endif %}
-      {% for r in sparse_results %}
-        <div class="result">
-          <div class="meta">
-            <span class="score">Score: {{ "%.4f"|format(r.score) }}</span> |
-            Page: {{ r.page_number|int if r.page_number is not none else "?" }}, Paragraph: {{ r.paragraph_index|int if r.paragraph_index is not none else "?" }} |
-            Source: {{ r.source_file or "?" }}
-          </div>
-          <div class="snippet">
-            {{ r.highlighted|safe }}
-          </div>
-        </div>
-      {% endfor %}
+  {% else %}
+    <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+      <svg width="64" height="64" fill="currentColor" viewBox="0 0 16 16" style="margin-bottom: 1rem; opacity: 0.5;">
+        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+      </svg>
+      <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">No results found</h3>
+      <p>Try adjusting your search query or using different keywords.</p>
     </div>
-  </div>
+  {% endif %}
   
   {% if dense_results|length > 0 or sparse_results|length > 0 %}
   <script>
@@ -81,7 +147,7 @@
       const rerankBtn = document.getElementById('rerank-btn');
       const rerankSpinner = document.getElementById('rerank-spinner');
       rerankBtn.disabled = true;
-      rerankBtn.textContent = 'Reranking...';
+      rerankBtn.innerHTML = '<div class="spinner" style="width: 16px; height: 16px; margin-right: 0.5rem;"></div>Reranking...';
       rerankSpinner.style.display = 'block';
 
       // Build the rerank URL with query and k
@@ -98,7 +164,7 @@
       
       // Show loading spinner, hide previous answer, disable button
       button.disabled = true;
-      button.textContent = 'Generating...';
+      button.innerHTML = '<div class="spinner" style="width: 16px; height: 16px; margin-right: 0.5rem;"></div>Generating...';
       loadingSpinner.style.display = 'block';
       answerDiv.style.display = 'none';
       
@@ -117,22 +183,23 @@
         const data = await response.json();
         
         if (response.ok && data.answer) {
-          // Display the answer
-          answerContent.innerHTML = '<p>' + data.answer.replace(/\n/g, '</p><p>') + '</p>';
+          // Display the answer with proper formatting
+          const formattedAnswer = data.answer.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+          answerContent.innerHTML = '<p>' + formattedAnswer + '</p>';
           answerDiv.style.display = 'block';
         } else {
           // Display error
-          answerContent.innerHTML = '<p style="color: red;">Error: ' + (data.error || 'Failed to generate answer') + '</p>';
+          answerContent.innerHTML = '<div class="error">Error: ' + (data.error || 'Failed to generate answer') + '</div>';
           answerDiv.style.display = 'block';
         }
       } catch (error) {
         console.error('Error:', error);
-        answerContent.innerHTML = '<p style="color: red;">Error: Failed to connect to server</p>';
+        answerContent.innerHTML = '<div class="error">Error: Failed to connect to server</div>';
         answerDiv.style.display = 'block';
       } finally {
         // Re-enable button and hide loading spinner
         button.disabled = false;
-        button.textContent = 'Generate Answer';
+        button.innerHTML = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/></svg>Generate Answer';
         loadingSpinner.style.display = 'none';
       }
     }

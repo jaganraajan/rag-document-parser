@@ -1,13 +1,65 @@
 {% extends "base.html" %}
+
+{% block title %}Home - RAG Search UI{% endblock %}
+
 {% block content %}
+  <div class="text-center mb-3">
+    <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;">
+      Welcome to RAG Semantic Search
+    </h1>
+    <p style="font-size: 1.25rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+      Explore and research your document corpus using advanced AI-powered semantic search
+    </p>
+  </div>
+
   <form class="search" action="/search" method="get">
-    <input type="text" name="q" placeholder="Enter your query"
-           value="{{ request.args.get('q','') }}" size="50" autofocus>
-    <input type="number" name="k" value="5" min="1" max="20" style="width:5rem">
-    <button type="submit">Search</button>
+    <div class="form-group">
+      <input type="text" 
+             name="q" 
+             placeholder="Enter your search query..." 
+             value="{{ request.args.get('q','') }}" 
+             autofocus
+             required>
+      <input type="number" 
+             name="k" 
+             value="5" 
+             min="1" 
+             max="20" 
+             title="Number of results">
+      <button type="submit">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+        </svg>
+        Search
+      </button>
+    </div>
   </form>
+
   {% if error %}
-    <p style="color:red">{{ error }}</p>
+    <div class="error">
+      {{ error }}
+    </div>
   {% endif %}
-  <p>Try queries that exist in your ingested PDFs.</p>
+
+  <div style="background-color: var(--surface-color); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--shadow-sm);">
+    <h2 style="color: var(--text-primary); margin-bottom: 1rem; font-size: 1.25rem;">Getting Started</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+      Enter queries related to your ingested PDF documents. The system will search through the content 
+      using advanced semantic understanding to find the most relevant passages.
+    </p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+      <div style="padding: 1rem; border: 1px solid var(--border-color); border-radius: var(--border-radius);">
+        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem; font-size: 1rem;">🔍 Semantic Search</h3>
+        <p style="color: var(--text-secondary); font-size: 0.875rem;">Find relevant content using natural language queries</p>
+      </div>
+      <div style="padding: 1rem; border: 1px solid var(--border-color); border-radius: var(--border-radius);">
+        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem; font-size: 1rem;">🎯 Smart Ranking</h3>
+        <p style="color: var(--text-secondary); font-size: 0.875rem;">Results ranked by relevance and similarity scores</p>
+      </div>
+      <div style="padding: 1rem; border: 1px solid var(--border-color); border-radius: var(--border-radius);">
+        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem; font-size: 1rem;">🤖 AI Answers</h3>
+        <p style="color: var(--text-secondary); font-size: 0.875rem;">Generate comprehensive answers from retrieved content</p>
+      </div>
+    </div>
+  </div>
 {% endblock %}
