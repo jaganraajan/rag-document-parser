@@ -66,11 +66,17 @@ def to_sparse_records(chunks: Iterable[Dict]) -> List[Dict]:
             continue
         meta = _flatten_metadata(c.get("metadata", {}))
         rec_id = c.get("id") or str(uuid.uuid4())
-        rec = {"id": rec_id, "chunk_text": text, **meta}
+        rec = {
+            "id": rec_id, 
+            "chunk_text": text,
+            "page_number": c.get("page_number"),
+            "paragraph_index": c.get("paragraph_index"),
+            "source_file": c.get("source_file"),
+            **meta}
         records.append(rec)
     return records
 
-def store_sparse_vectors(chunks: Iterable[Dict], batch_size: int = 100):
+def store_sparse_vectors(chunks: Iterable[Dict], batch_size: int = 90):
     """
     Upsert raw text records into sparse index; Pinecone applies sparse encoder.
     """

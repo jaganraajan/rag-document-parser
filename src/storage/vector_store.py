@@ -84,7 +84,7 @@ def to_records(chunks: Iterable[Dict]) -> List[Dict]:
 def store_vectors(chunks: Iterable[Dict], dense_model: str = DEFAULT_DENSE_MODEL):
     index = ensure_index(dense_model)
     records = to_records(chunks)
-    batch_size = 100
+    batch_size = 90 # Pinecone limit is 96
     for i in range(0, len(records), batch_size):
         batch = records[i:i+batch_size]
         t0 = time.perf_counter()
