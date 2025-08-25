@@ -25,7 +25,6 @@ except ImportError:
     select_config = None
 
 from src.storage.vector_store import DENSE_MODEL_OPTIONS, DEFAULT_DENSE_MODEL
-from src.storage.sparse_store import SPARSE_MODEL_OPTIONS, DEFAULT_SPARSE_MODEL
 
 app = Flask(__name__)
 
@@ -85,10 +84,8 @@ def index():
     return render_template(
         "index.html",
         dense_models=DENSE_MODEL_OPTIONS,
-        sparse_models=SPARSE_MODEL_OPTIONS,
         reranker_models=RERANKER_MODELS,
         default_dense_model=DEFAULT_DENSE_MODEL,
-        default_sparse_model=DEFAULT_SPARSE_MODEL,
         default_reranker_model=DEFAULT_RERANKER_MODEL
     )
 
@@ -110,15 +107,17 @@ def search():
         k = int(request.args.get("k", 5))
     except ValueError:
         k = 5
+    
+    reranker_model = request.args.get("reranker_model", DEFAULT_RERANKER_MODEL)
+    dense_model = request.args.get("dense_model", DEFAULT_DENSE_MODEL)
 
-    results = search_with_metadata(q, top_k=k)
+    results = search_with_metadata(q, top_k=k, dense_model=dense_model)
     # Add highlighted text
     for r in results["dense_results"]:
         r["highlighted"] = highlight(r["text"], q)
     for r in results["sparse_results"]:
         r["highlighted"] = highlight(r["text"], q)
 
-    reranker_model = request.args.get("reranker_model", DEFAULT_RERANKER_MODEL)
 
     return render_template(
         "results.html",
@@ -127,7 +126,8 @@ def search():
         sparse_results=results["sparse_results"],
         results=results["dense_results"] + results["sparse_results"],  # For backward compatibility
         k=k,
-        reranker_model=reranker_model
+        reranker_model=reranker_model,
+        dense_model=dense_model
     )
 
 @app.route('/feedback', methods=['POST'])
@@ -145,6 +145,7 @@ def rerank():
     try:
         query = request.args.get("q", "").strip()
         reranker_model = request.args.get("reranker_model", "").strip()
+        dense_model = request.args.get("dense_model", "").strip()
         if not query:
             return render_template("index.html", error="Enter a query.")
 
@@ -154,7 +155,7 @@ def rerank():
             k = 5
 
         # Get the original search results
-        original_results = search_with_metadata(query, top_k=k)
+        original_results = search_with_metadata(query, top_k=k, dense_model=dense_model)
         if not original_results:
             return render_template("results.html", query=query, dense_results=[], sparse_results=[], reranked_results=[], k=k, error="No search results found.")
 
@@ -169,11 +170,13 @@ def rerank():
             r["highlighted"] = highlight(r["text"], query)
 
         reranked_dense_results = []
-        if reranker_model == "bge-reranker-v2-m3":
-            print('in bge-reranker-v2-m3 reranker')
+        if reranker_model == "cross-encoder/ms-marco-MiniLM-L-12-v2":
+            reranked_dense_results = reranker.rerank(query, dense_results, text_key="text", top_n=5)
+        else:
+            print('in pinecone reranker', reranker_model)
             documents = [r["text"] for r in dense_results]
             reranked = pc.inference.rerank(
-                model="bge-reranker-v2-m3",
+                model=reranker_model,
                 query=query,
                 documents=documents,
                 top_n=k,
@@ -204,9 +207,7 @@ def rerank():
                 })
             print('pinecone reranked_results is', reranked_dense_results)
                 # print(reranked_results)
-        else:
-            reranked_dense_results = reranker.rerank(query, dense_results, text_key="text", top_n=5)
-
+           
         context = build_context_from_results(reranked_dense_results, sparse_results)
         # print('context is', context)
         # Optionally, remove 'raw' key for template safety
@@ -222,7 +223,8 @@ def rerank():
             sparse_results=sparse_results,
             k=k,
             reranked=True,
-            context=context
+            context=context,
+            dense_model=dense_model,
         )
     except Exception as e:
         print(f"Error reranking results: {str(e)}")

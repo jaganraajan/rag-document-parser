@@ -74,7 +74,7 @@ def ingest_documents(directory):
                 print(f'Chunks created: {len(chunks)}')
                 
                 # Store vectors
-                store_vectors(chunks)
+                store_vectors(chunks, dense_model=os.getenv("DENSE_MODEL"))
                 store_sparse_vectors(chunks)
                 
                 # # Log the ingestion event

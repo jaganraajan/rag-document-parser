@@ -1,9 +1,9 @@
 from typing import List, Dict, Any
 
 from .sparse_store import sparse_query
-from .vector_store import semantic_query
+from .vector_store import DEFAULT_DENSE_MODEL, semantic_query
 
-def search_with_metadata(query: str, top_k: int = 5) -> List[Dict[str, Any]]:
+def search_with_metadata(query: str, top_k: int = 5, dense_model: str = DEFAULT_DENSE_MODEL) -> List[Dict[str, Any]]:
     """
     Simplified parser for Pinecone response shape:
       {
@@ -23,16 +23,10 @@ def search_with_metadata(query: str, top_k: int = 5) -> List[Dict[str, Any]]:
         }
       }
     """
-    # Retrieve N*4 dense candidates
     initial_k = top_k * 4
-    dense_results_raw = semantic_query(query, top_k=initial_k)
+    dense_results_raw = semantic_query(query, top_k=initial_k, dense_model=dense_model)
     sparse_results_raw = sparse_query(query, top_k=top_k)
-    # print('in search_with_metadata, raw:', raw)
-    # print('result is', raw.get("result", {}))
-    # print('hits is', raw.get("result", {}).get("hits", []))
 
-    
-    # print('hits2 is', hits)
     
     def normalize(raw):
         hits = raw.get("result", {}).get("hits", [])

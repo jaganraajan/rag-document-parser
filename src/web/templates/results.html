@@ -74,7 +74,7 @@
           <span id="dense-count">{{ dense_results|length }}</span>
         </span>
         <span style="margin-left: 1rem; color: var(--secondary-color); font-size: 0.9rem;">
-          (Model: <code>llama-text-embed-v2</code>)
+          (Model: <code>{{ dense_model }}</code>)
         </span>
       </h2>
       
@@ -196,7 +196,8 @@
       const query = encodeURIComponent('{{ query }}');
       const k = encodeURIComponent('{{ k }}');
       const rerankModel = encodeURIComponent('{{ reranker_model }}');
-      window.location.href = `/rerank?q=${query}&k=${k}&reranker_model=${rerankModel}`;
+      const denseModel = encodeURIComponent('{{ dense_model }}');
+      window.location.href = `/rerank?q=${query}&k=${k}&reranker_model=${rerankModel}&dense_model=${denseModel}`;
     }
 
     async function generateAnswer() {

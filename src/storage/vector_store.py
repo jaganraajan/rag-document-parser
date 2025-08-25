@@ -24,19 +24,20 @@ EMBED_MODEL = "llama-text-embed-v2"  # keep consistent everywhere
 DEFAULT_DENSE_MODEL = "llama-text-embed-v2"
 DENSE_MODEL_OPTIONS = [
     "llama-text-embed-v2",
-    "text-embedding-ada-002",
-    "bge-base-en-v1.5"
+    "multilingual-e5-large"
 ]
 NAMESPACE = "__default__"  # or "philosophy" if multi-tenant mode is needed
 
-def ensure_index():
-    if not pc.has_index(INDEX_NAME):
+def ensure_index(DENSE_MODEL):
+    index_name = INDEX_NAME + "-" + DENSE_MODEL
+    print('index name is', index_name)
+    if not pc.has_index(index_name):
         pc.create_index_for_model(
-            name=INDEX_NAME,
+            name=index_name,
             cloud="aws",
             region="us-east-1",
             embed={
-                "model": EMBED_MODEL,
+                "model": DENSE_MODEL,
                 "field_map": {"text": "chunk_text"}   # tells pipeline which field to embed
             }
         )
@@ -77,8 +78,8 @@ def to_records(chunks: Iterable[Dict]) -> List[Dict]:
         })
     return records
 
-def store_vectors(chunks: Iterable[Dict]):
-    index = ensure_index()
+def store_vectors(chunks: Iterable[Dict], dense_model: str = DEFAULT_DENSE_MODEL):
+    index = ensure_index(dense_model)
     records = to_records(chunks)
     batch_size = 100
     for i in range(0, len(records), batch_size):
@@ -94,8 +95,9 @@ def store_vectors(chunks: Iterable[Dict]):
             raise
 
 
-def semantic_query(query: str, top_k: int = 5):
-    index = ensure_index()
+def semantic_query(query: str, top_k: int = 5, dense_model: str = DEFAULT_DENSE_MODEL):
+    index = ensure_index(dense_model)
+    print('in semantic_query, index is', index)
     queries_total.add(1, safe_attrs({"top_k": str(top_k)}))
     q_start = time.perf_counter()
     try:
