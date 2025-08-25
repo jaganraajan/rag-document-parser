@@ -7,7 +7,13 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 load_dotenv()
 
+# Use Pinecone inference rerank
+from pinecone import Pinecone
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+pc = Pinecone(api_key=PINECONE_API_KEY)
+
 from src.rerank.cross_encoder import CrossEncoderReranker
+from src.rerank.reranker import RERANKER_MODELS, DEFAULT_RERANKER_MODEL
 
 reranker = CrossEncoderReranker()
 
@@ -17,6 +23,9 @@ try:
     from src.web.config import select_config 
 except ImportError:
     select_config = None
+
+from src.storage.vector_store import DENSE_MODEL_OPTIONS, DEFAULT_DENSE_MODEL
+from src.storage.sparse_store import SPARSE_MODEL_OPTIONS, DEFAULT_SPARSE_MODEL
 
 app = Flask(__name__)
 
@@ -73,7 +82,15 @@ def highlight(text: str, query: str):
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template(
+        "index.html",
+        dense_models=DENSE_MODEL_OPTIONS,
+        sparse_models=SPARSE_MODEL_OPTIONS,
+        reranker_models=RERANKER_MODELS,
+        default_dense_model=DEFAULT_DENSE_MODEL,
+        default_sparse_model=DEFAULT_SPARSE_MODEL,
+        default_reranker_model=DEFAULT_RERANKER_MODEL
+    )
 
 @app.route("/about")
 def about():
@@ -86,6 +103,7 @@ def healthz():
 @app.route("/search")
 def search():
     q = request.args.get("q", "").strip()
+    # rerank_model = request.args.get("rerank_model", "").strip()
     if not q:
         return render_template("index.html", error="Enter a query.")
     try:
@@ -100,13 +118,16 @@ def search():
     for r in results["sparse_results"]:
         r["highlighted"] = highlight(r["text"], q)
 
+    reranker_model = request.args.get("reranker_model", DEFAULT_RERANKER_MODEL)
+
     return render_template(
         "results.html",
         query=q,
         dense_results=results["dense_results"],
         sparse_results=results["sparse_results"],
         results=results["dense_results"] + results["sparse_results"],  # For backward compatibility
-        k=k
+        k=k,
+        reranker_model=reranker_model
     )
 
 @app.route('/feedback', methods=['POST'])
@@ -123,6 +144,7 @@ def rerank():
     """Rerank search results and render a results page."""
     try:
         query = request.args.get("q", "").strip()
+        reranker_model = request.args.get("reranker_model", "").strip()
         if not query:
             return render_template("index.html", error="Enter a query.")
 
@@ -140,15 +162,53 @@ def rerank():
         sparse_results = original_results.get("sparse_results", [])
 
         print(f"Reranking {len(dense_results)} dense results and {len(sparse_results)} sparse results for query: {query}")
+        print("reranker_model is", reranker_model)
         for r in dense_results:
             r["highlighted"] = highlight(r["text"], query)
         for r in sparse_results:
             r["highlighted"] = highlight(r["text"], query)
 
-        reranked_dense_results = reranker.rerank(query, dense_results, text_key="text", top_n=5)
+        reranked_dense_results = []
+        if reranker_model == "bge-reranker-v2-m3":
+            print('in bge-reranker-v2-m3 reranker')
+            documents = [r["text"] for r in dense_results]
+            reranked = pc.inference.rerank(
+                model="bge-reranker-v2-m3",
+                query=query,
+                documents=documents,
+                top_n=k,
+                return_documents=True,
+                parameters={
+                    "truncate": "END"
+                }
+            )
+
+            print('pinecone reranked is', reranked)
+            # Map reranked results to include text and score
+            for item in reranked.data:
+                idx = item["index"]
+                # Get the original dense result by index if available
+                orig = dense_results[idx] if idx < len(dense_results) else {}
+                reranked_dense_results.append({
+                    "text": item["document"]["text"],
+                    "score": orig.get("score", item["score"]),
+                    "rerank_score": item["score"],
+                    "highlighted": highlight(item["document"]["text"], query),
+                    "id": orig.get("id", idx),
+                    "metadata": orig.get("metadata", {}),
+                    "page_number": orig.get("page_number"),
+                    "paragraph_index": orig.get("paragraph_index"),
+                    "source_file": orig.get("source_file"),
+                    "title": orig.get("title"),
+                    # Add other fields as needed
+                })
+            print('pinecone reranked_results is', reranked_dense_results)
+                # print(reranked_results)
+        else:
+            reranked_dense_results = reranker.rerank(query, dense_results, text_key="text", top_n=5)
 
         context = build_context_from_results(reranked_dense_results, sparse_results)
-        print('context is', context)
+        # print('context is', context)
         # Optionally, remove 'raw' key for template safety
         # for r in reranked_results.get("dense_results", []):
         #     r.pop("raw", None)

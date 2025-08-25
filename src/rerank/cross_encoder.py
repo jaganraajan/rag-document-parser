@@ -33,13 +33,13 @@ class CrossEncoderReranker:
         encodings = {k: v.to(self.device) for k, v in encodings.items()}
         with torch.no_grad():
             logits = self.model(**encodings).logits
-            print("Model logits:", logits)
+            # print("Model logits:", logits)
             scores = logits.squeeze(-1).cpu().numpy()
             # scores = np.nan_to_num(scores, nan=0.0)
-        print('Scores:', scores[:10])
+        # print('Scores:', scores[:10])
         # Attach scores and rerank
         for res, score in zip(results, scores):
             res["rerank_score"] = float(score)
         reranked = sorted(results, key=lambda x: x["rerank_score"], reverse=True)
-        print('reranked results:', reranked[:top_n])
+        # print('reranked results:', reranked[:top_n])
         return reranked[:top_n]

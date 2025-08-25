@@ -13,6 +13,12 @@ pc = Pinecone(api_key=PINECONE_API_KEY)
 
 SPARSE_INDEX_NAME = "philosophy-rag-sparse"
 SPARSE_MODEL = "pinecone-sparse-english-v0"  # managed sparse encoder
+DEFAULT_SPARSE_MODEL = "pinecone-sparse-english-v0"
+SPARSE_MODEL_OPTIONS = [
+    "pinecone-sparse-english-v0",
+    "pinecone-sparse-multilingual-v0",
+    "bm25-sparse"
+]
 
 def ensure_sparse_index():
     """

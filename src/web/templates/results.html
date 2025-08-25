@@ -33,7 +33,7 @@
             Rerank Results
           </button>
           <div style="font-size: 0.9em; color: var(--secondary-color); margin-top: 0.25rem;">
-            Uses <code>cross-encoder/ms-marco-MiniLM-L-12-v2</code> for reranking
+            Use <code>{{ reranker_model }}</code> for reranking
           </div>
         {% endif %}
       {% endif %}
@@ -195,7 +195,8 @@
       // Build the rerank URL with query and k
       const query = encodeURIComponent('{{ query }}');
       const k = encodeURIComponent('{{ k }}');
-      window.location.href = `/rerank?q=${query}&k=${k}`;
+      const rerankModel = encodeURIComponent('{{ reranker_model }}');
+      window.location.href = `/rerank?q=${query}&k=${k}&reranker_model=${rerankModel}`;
     }
 
     async function generateAnswer() {

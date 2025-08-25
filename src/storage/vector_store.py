@@ -21,6 +21,12 @@ pc = Pinecone(api_key=PINECONE_API_KEY)
 
 INDEX_NAME = "philosophy-rag"
 EMBED_MODEL = "llama-text-embed-v2"  # keep consistent everywhere
+DEFAULT_DENSE_MODEL = "llama-text-embed-v2"
+DENSE_MODEL_OPTIONS = [
+    "llama-text-embed-v2",
+    "text-embedding-ada-002",
+    "bge-base-en-v1.5"
+]
 NAMESPACE = "__default__"  # or "philosophy" if multi-tenant mode is needed
 
 def ensure_index():
