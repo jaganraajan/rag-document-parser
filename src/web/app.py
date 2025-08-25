@@ -205,7 +205,6 @@ def rerank():
                     "title": orig.get("title"),
                     # Add other fields as needed
                 })
-            print('pinecone reranked_results is', reranked_dense_results)
                 # print(reranked_results)
            
         context = build_context_from_results(reranked_dense_results, sparse_results)

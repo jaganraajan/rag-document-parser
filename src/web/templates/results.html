@@ -95,9 +95,9 @@
               {% else %}
                 <span class="score">Score: {{ "%.4f"|format(r.score) }}</span>
               {% endif %}
-              <span>Page: {{ r.page_number|int if r.page_number is not none else "?" }}</span>
-              <span>Paragraph: {{ r.paragraph_index|int if r.paragraph_index is not none else "?" }}</span>
-              <span>Source: {{ r.source_file or "?" }}</span>
+              <span>Page: {{ r.raw.fields.page_number if r.raw and r.raw.fields.page_number is defined else "?" }}</span>
+              <span>Paragraph: {{ r.raw.fields.paragraph_index if r.raw and r.raw.fields.paragraph_index is defined else "?" }}</span>
+              <span>Source: {{ r.raw.fields.source_file if r.raw and r.raw.fields.source_file is defined else "?" }}</span>
             </div>
             <div class="search-result" data-chunk-id="{{ r.id }}" style="color: var(--text-primary); line-height: 1.6;">
                 <div class="chunk-text">{{ r.highlighted|safe }}</div>
@@ -136,9 +136,9 @@
           <div class="result">
             <div class="meta">
               <span class="score">Score: {{ "%.4f"|format(r.score) }}</span>
-              <span>Page: {{ r.page_number|int if r.page_number is not none else "?" }}</span>
-              <span>Paragraph: {{ r.paragraph_index|int if r.paragraph_index is not none else "?" }}</span>
-              <span>Source: {{ r.source_file or "?" }}</span>
+              <span>Page: {{ r.raw.fields.page_number if r.raw and r.raw.fields.page_number is defined else "?" }}</span>
+              <span>Paragraph: {{ r.raw.fields.paragraph_index if r.raw and r.raw.fields.paragraph_index is defined else "?" }}</span>
+              <span>Source: {{ r.raw.fields.source_file if r.raw and r.raw.fields.source_file is defined else "?" }}</span>
             </div>
             <div class="snippet" style="color: var(--text-primary); line-height: 1.6;">
               {{ r.highlighted|safe }}

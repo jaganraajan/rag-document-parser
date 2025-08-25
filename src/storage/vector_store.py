@@ -30,7 +30,6 @@ NAMESPACE = "__default__"  # or "philosophy" if multi-tenant mode is needed
 
 def ensure_index(DENSE_MODEL):
     index_name = INDEX_NAME + "-" + DENSE_MODEL
-    print('index name is', index_name)
     if not pc.has_index(index_name):
         pc.create_index_for_model(
             name=index_name,
@@ -41,7 +40,7 @@ def ensure_index(DENSE_MODEL):
                 "field_map": {"text": "chunk_text"}   # tells pipeline which field to embed
             }
         )
-    return pc.Index(INDEX_NAME)
+    return pc.Index(index_name)
 
 def _flatten_metadata(meta: Dict[str, any]) -> Dict[str, any]:
     flat = {}
@@ -73,9 +72,13 @@ def to_records(chunks: Iterable[Dict]) -> List[Dict]:
         metadata = _flatten_metadata(c.get("metadata", {}))
         records.append({
             "id": str(uuid.uuid4()),
-            "chunk_text": c.get("chunk"),      # field mapped to 'text'
+            "chunk_text": c.get("chunk"),
+            "page_number": c.get("page_number"),
+            "paragraph_index": c.get("paragraph_index"),
+            "source_file": c.get("source_file"),
             **metadata
         })
+    print('records to upsert:', records[:2])
     return records
 
 def store_vectors(chunks: Iterable[Dict], dense_model: str = DEFAULT_DENSE_MODEL):
@@ -88,8 +91,8 @@ def store_vectors(chunks: Iterable[Dict], dense_model: str = DEFAULT_DENSE_MODEL
         try:
             index.upsert_records(NAMESPACE, batch)
             elapsed = time.perf_counter() - t0
-            upsert_batch_seconds.record(elapsed, safe_attrs({"index": INDEX_NAME}))
-            upsert_records_total.add(len(batch), safe_attrs({"index": INDEX_NAME}))
+            upsert_batch_seconds.record(elapsed, safe_attrs({"index": INDEX_NAME + "-" + dense_model}))
+            upsert_records_total.add(len(batch), safe_attrs({"index": INDEX_NAME + "-" + dense_model}))
         except Exception as e:
             upsert_errors_total.add(1, safe_attrs({"error.type": e.__class__.__name__}))
             raise

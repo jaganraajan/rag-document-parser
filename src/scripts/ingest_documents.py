@@ -43,18 +43,20 @@ def ingest_documents(directory):
 
                 # Count pages and page-level extraction failures
                 page_texts = []
+                page_nums = []
                 failures = 0
-                for _, page_text in pages:
+                for page_num, page_text in pages:
                     if page_text:
                         page_texts.append(page_text)
                     else:
                         page_texts.append("")
                         failures += 1
+                    page_nums.append(page_num)
                 pdf_pages_total.add(len(pages), safe_attrs({}))
                 if failures:
                     text_extraction_failures_total.add(failures, safe_attrs({"reason": "empty_text"}))
                 
-                pdf_content = "\n".join(page_texts)
+                # pdf_content = "\n".join(page_texts)
 
                 # Phase: extract + normalize metadata
                 t1 = time.perf_counter()
@@ -64,14 +66,21 @@ def ingest_documents(directory):
                 
                 # Phase: chunking
                 t2 = time.perf_counter()
-                chunks = chunk_document(pdf_content, normalized_metadata)
+                chunks = []
+                for page_num, page_text in zip(page_nums, page_texts):
+                    page_chunks = chunk_document(page_text, normalized_metadata)
+                    
+                    chunk_count_total.add(len(page_chunks), safe_attrs({}))
+                    total_chars = sum(len(c.get('chunk', '')) for c in page_chunks)
+                    if total_chars:
+                        chunk_chars_sum.add(total_chars, safe_attrs({}))
+                    for idx, chunk in enumerate(page_chunks):
+                        chunk['page_number'] = page_num
+                        chunk['paragraph_index'] = idx
+                        chunk['source_file'] = filename
+                        chunks.append(chunk)
+                
                 chunking_seconds.record(time.perf_counter() - t2, safe_attrs({}))
-                chunk_count_total.add(len(chunks), safe_attrs({}))
-                total_chars = sum(len(c.get('chunk', '')) for c in chunks)
-                if total_chars:
-                    chunk_chars_sum.add(total_chars, safe_attrs({}))
-
-                print(f'Chunks created: {len(chunks)}')
                 
                 # Store vectors
                 store_vectors(chunks, dense_model=os.getenv("DENSE_MODEL"))
