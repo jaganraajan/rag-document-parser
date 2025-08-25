@@ -225,6 +225,7 @@ def rerank():
             reranked=True,
             context=context,
             dense_model=dense_model,
+            reranker_model=reranker_model
         )
     except Exception as e:
         print(f"Error reranking results: {str(e)}")

@@ -167,15 +167,23 @@
         const query = "{{ query|e }}";  // Assuming 'query' is in the context
 
         console.log(`Feedback for chunk ${chunkId}: ${feedback} for query "${query}"`);
+        
+        // Build feedback payload
+        const payload = {
+          query: query,
+          chunk_id: chunkId,
+          feedback: Number(feedback),
+          chunk_text: chunkDiv.querySelector('.chunk-text').innerText,
+          dense_model: "{{ dense_model }}",
+      };
+        if("{{ reranked }}") {
+          payload.rerank_model = "{{ reranker_model }}";
+        }
+
         fetch('/feedback', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            query: query,
-            chunk_id: chunkId,
-            feedback: Number(feedback),
-            chunk_text: chunkDiv.querySelector('.chunk-text').innerText
-          })
+          body: JSON.stringify(payload)
         }).then(res => {
           if(res.ok) {
             this.disabled = true;
