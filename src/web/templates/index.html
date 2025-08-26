@@ -5,11 +5,11 @@
 {% block content %}
   <div class="text-center mb-3">
     <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;">
-      Welcome to RAG Semantic Search
+      Welcome to AI-powered RAG Knowledge Engine
     </h1>
-    <p style="font-size: 1.25rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
-      Explore and research your document corpus using advanced AI-powered semantic search
-    </p>
+    <p style="font-size: 1.25rem; color: var(--text-secondary); max-width: 900px; margin: 0 auto;">
+      This application is a personal project to explore and research my favorite philosophy PDFs using a Retrieval-Augmented Generation (RAG) pipeline. It provides an intelligent way to search through document collections using Hybrid vector search and reranker for dense vector results.
+  </p>
   </div>
 
   <form class="search" action="/search" method="get">
@@ -19,26 +19,34 @@
              placeholder="Enter your search query..." 
              value="{{ request.args.get('q','') }}" 
              autofocus
-             required>
+             required
+             style="padding: 0.75rem; border-radius: 8px; border: 1px solid var(--secondary-color); font-size: 1rem;">
       <input type="number" 
              name="k" 
              value="5" 
              min="1" 
              max="20" 
-             title="Number of results">
-      <!-- Dense model dropdown -->
-      <select name="dense_model" id="dense_model">
-        {% for model in dense_models %}
-          <option value="{{ model }}" {% if model == default_dense_model %}selected{% endif %}>Dense: {{ model }}</option>
-        {% endfor %}
-      </select>
-      <!-- Reranker model dropdown -->
-      <select name="reranker_model" id="reranker_model">
-        {% for model in reranker_models %}
-          <option value="{{ model }}" {% if model == default_reranker_model %}selected{% endif %}>Reranker: {{ model }}</option>
-        {% endfor %}
-      </select>
-      <button type="submit">
+             title="Number of results"
+             style="padding: 0.75rem; border-radius: 8px; border: 1px solid var(--secondary-color); font-size: 1rem;">
+      <div class="dropdown-divider"  style="display: flex; flex-direction: column; gap: 1rem;">
+         <!-- Dense model dropdown -->
+          <select name="dense_model" id="dense_model"
+                style="padding: 0.75rem; border-radius: 8px; border: 1px solid var(--secondary-color); font-size: 1rem; background: var(--background-color); color: var(--text-primary);">
+          {% for model in dense_models %}
+            <option value="{{ model }}" {% if model == default_dense_model %}selected{% endif %}>Dense: {{ model }}</option>
+          {% endfor %}
+          </select>
+          <!-- Reranker model dropdown -->
+          <select name="reranker_model" id="reranker_model"
+                style="padding: 0.75rem; border-radius: 8px; border: 1px solid var(--secondary-color); font-size: 1rem; background: var(--background-color); color: var(--text-primary);">
+          {% for model in reranker_models %}
+            <option value="{{ model }}" {% if model == default_reranker_model %}selected{% endif %}>Reranker: {{ model }}</option>
+          {% endfor %}
+          </select>
+      </div>
+            
+      <button type="submit"
+              style="padding: 0.75rem; border-radius: 8px; background: var(--primary-color); color: #fff; font-size: 1.1rem; font-weight: bold; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
         <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
           <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
         </svg>
