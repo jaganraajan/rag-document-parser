@@ -9,6 +9,7 @@ RAG Document Parser is a modular system for parsing, chunking, and searching doc
 
 ### Grafana Dashboard
 <img width="1439" height="806" alt="Screenshot 2025-08-26 at 9 25 28 AM" src="https://github.com/user-attachments/assets/fec2e171-e66c-407d-ae83-bb2090fd3ae5" />
+
 ### MLFlow Dashboard
 <img width="1205" height="767" alt="Screenshot 2025-08-26 at 10 16 52 AM" src="https://github.com/user-attachments/assets/04aba876-db2b-48e8-ae09-0edb842f171d" />
 <img width="1395" height="767" alt="Screenshot 2025-08-26 at 10 12 56 AM" src="https://github.com/user-attachments/assets/c67fcbbf-a763-408a-915c-e70398e28a1e" />
