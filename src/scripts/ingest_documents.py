@@ -99,5 +99,5 @@ def ingest_documents(directory):
                     documents_ingested_total.add(1, safe_attrs({"status": "success"}))
 
 if __name__ == '__main__':
-    directory = '/Users/jaganraajan/projects/rag-document-parser/docs/test'  # Update this path
+    directory = '/Users/jaganraajan/projects/rag-document-parser/docs/pdfs'  # Update this path
     ingest_documents(directory)

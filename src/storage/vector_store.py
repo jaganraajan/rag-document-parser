@@ -78,7 +78,7 @@ def to_records(chunks: Iterable[Dict]) -> List[Dict]:
             "source_file": c.get("source_file"),
             **metadata
         })
-    print('records to upsert:', records[:2])
+    
     return records
 
 def store_vectors(chunks: Iterable[Dict], dense_model: str = DEFAULT_DENSE_MODEL):

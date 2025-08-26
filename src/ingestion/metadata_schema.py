@@ -8,16 +8,23 @@ def extract_metadata(metadata):
     Returns:
         dict: A dictionary with cleaned and structured metadata.
     """
+    def safe_str(val):
+        # Convert IndirectObject or None to string
+        try:
+            return str(val).strip() if val is not None else ""
+        except Exception:
+            return ""
+        
     extracted_metadata = {
-        "title": metadata.get('/Title', '').strip(),
-        "author": metadata.get('/Author', '').strip(),
-        "producer": metadata.get('/Producer', '').strip(),
-        "creator": metadata.get('/Creator', '').strip(),
-        "creation_date": metadata.get('/CreationDate', '').strip(),
-        "modification_date": metadata.get('/ModDate', '').strip(),
-        "keywords": metadata.get('/Keywords', '').strip(),
+        "title": safe_str(metadata.get('/Title', '')),
+        "author": safe_str(metadata.get('/Author', '')),
+        "producer": safe_str(metadata.get('/Producer', '')),
+        "creator": safe_str(metadata.get('/Creator', '')),
+        "creation_date": safe_str(metadata.get('/CreationDate', '')),
+        "modification_date": safe_str(metadata.get('/ModDate', '')),
+        "keywords": safe_str(metadata.get('/Keywords', '')),
         "apple_keywords": metadata.get('/AAPL:Keywords', []),
-        "rgid": metadata.get('/rgid', '').strip()
+        "rgid": safe_str(metadata.get('/rgid', ''))
     }
 
     # Additional processing for dates if needed
