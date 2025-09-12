@@ -1,0 +1,1 @@
+"""Model fallback module."""

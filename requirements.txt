@@ -12,3 +12,7 @@ opentelemetry-instrumentation-flask
 opentelemetry-instrumentation-requests
 torch
 transformers
+streamlit
+pdfplumber
+pyyaml
+pillow

@@ -1,0 +1,1 @@
+"""Normalization module for hybrid document processing."""

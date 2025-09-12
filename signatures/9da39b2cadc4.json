@@ -1,0 +1,97 @@
+{
+  "signature_id": "9da39b2cadc4",
+  "tokens": [
+    {
+      "page": 1,
+      "element_type": "header",
+      "bbox_bucket": [
+        12,
+        0,
+        987,
+        20
+      ],
+      "token_count": 2,
+      "content_hash": "f8e3087a"
+    },
+    {
+      "page": 1,
+      "element_type": "header",
+      "bbox_bucket": [
+        12,
+        25,
+        987,
+        45
+      ],
+      "token_count": 2,
+      "content_hash": "5a987841"
+    },
+    {
+      "page": 1,
+      "element_type": "header",
+      "bbox_bucket": [
+        12,
+        50,
+        987,
+        70
+      ],
+      "token_count": 4,
+      "content_hash": "55b446ab"
+    },
+    {
+      "page": 1,
+      "element_type": "header",
+      "bbox_bucket": [
+        12,
+        75,
+        987,
+        95
+      ],
+      "token_count": 7,
+      "content_hash": "e2c9226a"
+    },
+    {
+      "page": 1,
+      "element_type": "separator",
+      "bbox_bucket": [
+        12,
+        110,
+        987,
+        115
+      ],
+      "token_count": 1,
+      "content_hash": "b699dff2"
+    },
+    {
+      "page": 1,
+      "element_type": "text",
+      "bbox_bucket": [
+        12,
+        125,
+        987,
+        145
+      ],
+      "token_count": 8,
+      "content_hash": "4a3107ce"
+    },
+    {
+      "page": 1,
+      "element_type": "text",
+      "bbox_bucket": [
+        12,
+        155,
+        987,
+        175
+      ],
+      "token_count": 10,
+      "content_hash": "16e94749"
+    }
+  ],
+  "hash_value": "6b5bf2cec87dc3f46dceb56c81c44701dd173af4",
+  "created_at": "2025-09-12T19:04:08.563237",
+  "version": "1.0",
+  "document_count": 2,
+  "sample_filenames": [
+    "tmpcgo9rmxo.eml",
+    "tmpgzcxfhmk.eml"
+  ]
+}

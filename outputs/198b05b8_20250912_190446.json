@@ -1,0 +1,89 @@
+{
+  "doc_id": "198b05b8",
+  "ingest_metadata": {
+    "filename": "tmpvrev7gav.txt",
+    "file_size": 144,
+    "file_type": "text",
+    "uploaded_at": "2025-09-12 19:04:46.338565",
+    "content_hash": "eed84c752a648bf33360fd83c10809389d705fb1a816e3448bdc839e8fee810e",
+    "page_count": 1,
+    "processing_time_seconds": 0.0016536712646484375
+  },
+  "sections": [
+    {
+      "title": "Document Content",
+      "content": "Test Invoice\nInvoice Number: INV-12345\nTotal Amount: $123.45\nDate: 12/15/2024\nVendor: Test Company Inc.\nEmail: test@company.com\nPhone: 555-1234\n",
+      "level": 1,
+      "bbox": null,
+      "metadata": {}
+    }
+  ],
+  "key_values": [
+    {
+      "key": "invoice_number",
+      "value": "Invoice",
+      "confidence": 0.9,
+      "bbox": null,
+      "extraction_method": "rule"
+    },
+    {
+      "key": "total_amount",
+      "value": 123.45,
+      "confidence": 0.8,
+      "bbox": null,
+      "extraction_method": "rule"
+    },
+    {
+      "key": "date",
+      "value": "12/15/2024",
+      "confidence": 0.7,
+      "bbox": null,
+      "extraction_method": "rule"
+    },
+    {
+      "key": "vendor_name",
+      "value": "Test Company Inc.",
+      "confidence": 0.6,
+      "bbox": null,
+      "extraction_method": "rule"
+    },
+    {
+      "key": "email",
+      "value": "test@company.com",
+      "confidence": 0.9,
+      "bbox": null,
+      "extraction_method": "rule"
+    }
+  ],
+  "tables": [],
+  "chunks": [
+    {
+      "content": "Test Invoice\nInvoice Number: INV-12345\nTotal Amount: $123.45\nDate: 12/15/2024\nVendor: Test Company Inc.\nEmail: test@company.com\nPhone: 555-1234",
+      "chunk_id": "198b05b8_chunk_000",
+      "start_page": 1,
+      "end_page": 1,
+      "tokens": 18,
+      "embedding": null,
+      "metadata": {}
+    }
+  ],
+  "processing_meta": {
+    "pipeline_version": "1.0.0",
+    "signature_id": "56d7e329eff8",
+    "signature_match_score": 1.0,
+    "rules_applied": [
+      "global"
+    ],
+    "model_calls_made": 0,
+    "total_cost_usd": 0.0,
+    "coverage_stats": {
+      "required_fields_total": 5,
+      "extracted": 5,
+      "rule_based": 5,
+      "model_based": 0,
+      "rule_coverage": 1.0,
+      "model_coverage": 0.0
+    }
+  },
+  "interpretation_log_path": null
+}

@@ -1,0 +1,90 @@
+{
+  "doc_id": "9222bc87",
+  "ingest_metadata": {
+    "filename": "tmpcgo9rmxo.eml",
+    "file_size": 240,
+    "file_type": "email",
+    "uploaded_at": "2025-09-12 19:04:08.562638",
+    "content_hash": "91821f287da88f97e33ddfaa8d68f4ae6b21f30587bf99709ac838ff3f6120ef",
+    "page_count": 1,
+    "processing_time_seconds": 0.0011038780212402344
+  },
+  "sections": [
+    {
+      "title": "Email Headers",
+      "content": "From: sender@example.com\nTo: recipient@example.com\nSubject: Test Email Invoice\nDate: Mon, 15 Dec 2024 10:00:00 +0000",
+      "level": 1,
+      "bbox": {
+        "x1": 10,
+        "y1": 0,
+        "x2": 790.0,
+        "y2": 95,
+        "page": 1
+      },
+      "metadata": {}
+    },
+    {
+      "title": "Email Body",
+      "content": "This is a test email with invoice information.\n\nInvoice Number: INV-67890\nTotal Amount: $456.78\nVendor: Email Vendor Corp",
+      "level": 1,
+      "bbox": {
+        "x1": 10,
+        "y1": 125,
+        "x2": 790.0,
+        "y2": 175,
+        "page": 1
+      },
+      "metadata": {}
+    }
+  ],
+  "key_values": [],
+  "tables": [],
+  "chunks": [
+    {
+      "content": "From: sender@example.com\nTo: recipient@example.com\nSubject: Test Email Invoice\nDate: Mon, 15 Dec 2024 10:00:00 +0000",
+      "chunk_id": "9222bc87_chunk_000",
+      "start_page": 1,
+      "end_page": 1,
+      "tokens": 15,
+      "embedding": null,
+      "metadata": {}
+    },
+    {
+      "content": "This is a test email with invoice information.",
+      "chunk_id": "9222bc87_chunk_001",
+      "start_page": 1,
+      "end_page": 1,
+      "tokens": 8,
+      "embedding": null,
+      "metadata": {}
+    },
+    {
+      "content": "Invoice Number: INV-67890\nTotal Amount: $456.78\nVendor: Email Vendor Corp",
+      "chunk_id": "9222bc87_chunk_002",
+      "start_page": 1,
+      "end_page": 1,
+      "tokens": 10,
+      "embedding": null,
+      "metadata": {}
+    }
+  ],
+  "processing_meta": {
+    "pipeline_version": "1.0.0",
+    "signature_id": "9da39b2cadc4",
+    "signature_match_score": 1.0,
+    "rules_applied": [
+      "global"
+    ],
+    "model_calls_made": 0,
+    "total_cost_usd": 0.0,
+    "coverage_stats": {
+      "required_fields_total": 0,
+      "extracted": 0,
+      "rule_based": 0,
+      "model_based": 0,
+      "rule_coverage": 0.0,
+      "model_coverage": 0.0
+    }
+  },
+  "interpretation_log_path": null
+}

@@ -1,0 +1,25 @@
+{
+  "signature_id": "56d7e329eff8",
+  "tokens": [
+    {
+      "page": 1,
+      "element_type": "text",
+      "bbox_bucket": [
+        0,
+        0,
+        1000,
+        1000
+      ],
+      "token_count": 18,
+      "content_hash": "e03f9ba7"
+    }
+  ],
+  "hash_value": "b562d613326f74027e8239ccb10dbe635179f24e",
+  "created_at": "2025-09-12T19:04:08.560778",
+  "version": "1.0",
+  "document_count": 2,
+  "sample_filenames": [
+    "tmpvfq3kux1.txt",
+    "tmpvrev7gav.txt"
+  ]
+}

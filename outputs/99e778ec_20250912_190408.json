@@ -1,0 +1,53 @@
+{
+  "doc_id": "99e778ec",
+  "ingest_metadata": {
+    "filename": "tmpvfq3kux1.txt",
+    "file_size": 144,
+    "file_type": "text",
+    "uploaded_at": "2025-09-12 19:04:08.560452",
+    "content_hash": "eed84c752a648bf33360fd83c10809389d705fb1a816e3448bdc839e8fee810e",
+    "page_count": 1,
+    "processing_time_seconds": 0.0007278919219970703
+  },
+  "sections": [
+    {
+      "title": "Document Content",
+      "content": "Test Invoice\nInvoice Number: INV-12345\nTotal Amount: $123.45\nDate: 12/15/2024\nVendor: Test Company Inc.\nEmail: test@company.com\nPhone: 555-1234\n",
+      "level": 1,
+      "bbox": null,
+      "metadata": {}
+    }
+  ],
+  "key_values": [],
+  "tables": [],
+  "chunks": [
+    {
+      "content": "Test Invoice\nInvoice Number: INV-12345\nTotal Amount: $123.45\nDate: 12/15/2024\nVendor: Test Company Inc.\nEmail: test@company.com\nPhone: 555-1234",
+      "chunk_id": "99e778ec_chunk_000",
+      "start_page": 1,
+      "end_page": 1,
+      "tokens": 18,
+      "embedding": null,
+      "metadata": {}
+    }
+  ],
+  "processing_meta": {
+    "pipeline_version": "1.0.0",
+    "signature_id": "56d7e329eff8",
+    "signature_match_score": 1.0,
+    "rules_applied": [
+      "global"
+    ],
+    "model_calls_made": 0,
+    "total_cost_usd": 0.0,
+    "coverage_stats": {
+      "required_fields_total": 0,
+      "extracted": 0,
+      "rule_based": 0,
+      "model_based": 0,
+      "rule_coverage": 0.0,
+      "model_coverage": 0.0
+    }
+  },
+  "interpretation_log_path": null
+}
